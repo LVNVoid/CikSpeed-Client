@@ -19,7 +19,7 @@ const HistoryReservationPage = () => {
   useEffect(() => {
     const fetchHistoryReservations = async () => {
       try {
-        const response = await api.get("/reservations/history");
+        const response = await api.get("/reservations/history/user");
         setReservations(response.data);
       } catch (error) {
         console.error("Gagal mengambil data riwayat reservasi", error);

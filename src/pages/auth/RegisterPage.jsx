@@ -1,13 +1,13 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
+import { toast } from "sonner";
 
 // Import komponen shadcn/ui
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/contexts/authContext";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -25,6 +26,7 @@ const RegisterPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth(); // Ambil fungsi login dari AuthContext
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,19 +34,23 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        {
-          name,
-          phone,
-          address,
-          password,
-        }
-      );
-      console.log(response.data);
-      navigate("/login"); // Redirect ke halaman login setelah registrasi
+      const response = await api.post("/auth/register", {
+        name,
+        phone,
+        address,
+        password,
+      });
+
+      // Simpan data user ke AuthContext dan localStorage
+      login(response.data.user);
+
+      navigate("/"); // Redirect ke halaman utama setelah registrasi
+      toast.success("Registrasi berhasil.");
     } catch (error) {
       setError(
+        error.response?.data?.error || "Registrasi gagal. Silakan coba lagi."
+      );
+      toast.error(
         error.response?.data?.error || "Registrasi gagal. Silakan coba lagi."
       );
     } finally {
@@ -119,14 +125,6 @@ const RegisterPage = () => {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-gray-500">
-            Sudah punya akun?{" "}
-            <a href="/login" className="text-blue-500 hover:text-blue-700">
-              Login disini
-            </a>
-          </p>
-        </CardFooter>
       </Card>
     </div>
   );

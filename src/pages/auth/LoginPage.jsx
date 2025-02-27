@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/contexts/authContext";
 
 const LoginPage = () => {
   const [phone, setPhone] = useState("");
@@ -22,6 +23,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth(); // Ambil fungsi login dari AuthContext
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,10 +36,10 @@ const LoginPage = () => {
         password,
       });
 
-      // Simpan token dan data user ke localStorage
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      // Simpan data user ke AuthContext dan localStorage
+      login(response.data.user);
 
-      navigate("/reservations"); // Redirect ke halaman reservasi setelah login
+      navigate("/"); // Redirect ke halaman utama setelah login
     } catch (error) {
       setError(
         error.response?.data?.error || "Login gagal. Silakan coba lagi."
@@ -77,9 +79,7 @@ const LoginPage = () => {
               />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-              </div>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -95,11 +95,14 @@ const LoginPage = () => {
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             Belum punya akun?{" "}
-            <a href="/register" className="text-blue-500 hover:text-blue-700">
+            <button
+              onClick={() => navigate("/register")}
+              className="text-emerald-500 hover:text-emerald-700"
+            >
               Daftar disini
-            </a>
+            </button>
           </p>
         </CardFooter>
       </Card>

@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,9 @@ const AddVehicleModal = ({ onVehicleAdded }) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Tambah Kendaraan</DialogTitle>
+          <DialogDescription>
+            Masukkan informasi kendaraan yang ingin ditambahkan.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
