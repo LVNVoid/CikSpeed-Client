@@ -4,31 +4,40 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Tambahkan loading state
+  const [loading, setLoading] = useState(true);
 
-  // Ambil data user dari localStorage saat aplikasi dimuat
+  // Ambil data user dari localStorage saat komponen dimuat
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
+        if (parsedUser && typeof parsedUser === "object") {
+          setUser(parsedUser);
+        } else {
+          console.error("Invalid user data in localStorage");
+          localStorage.removeItem("user");
+        }
       } catch (error) {
         console.error("Error parsing user data:", error);
-        localStorage.removeItem("user"); // Hapus data yang tidak valid
+        localStorage.removeItem("user");
       }
     }
-    setLoading(false); // Set loading ke false setelah selesai
+    setLoading(false);
   }, []);
 
   const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData)); // Simpan user ke localStorage
+    if (userData && typeof userData === "object" && userData.role) {
+      setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
+    } else {
+      console.error("Invalid userData provided to login function");
+    }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("user"); // Hapus user dari localStorage
+    localStorage.removeItem("user");
   };
 
   return (

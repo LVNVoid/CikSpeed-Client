@@ -11,9 +11,12 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 import UnauthorizedPage from "./pages/errors/UnauthorizedPage";
 import NotFoundPage from "./pages/errors/NotFoundPage";
-import LandingPage from "./pages/LadingPage";
 import AdminLayout from "./layouts/AdminLayout";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
+import LandingPage from "./pages/LadingPage";
+import AdminReservationPage from "./pages/admin/AdminReservationPage";
+import AdminHistoryPage from "./pages/admin/AdminHistoryPage";
+import AdminUsersPage from "./pages/admin/AdminUsersPage";
 
 const router = createBrowserRouter([
   {
@@ -61,7 +64,35 @@ const router = createBrowserRouter([
     children: [
       {
         path: "dashboard",
-        element: <AdminDashboardPage />,
+        element: (
+          <ProtectedRoute roles={["admin"]}>
+            <AdminDashboardPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "reservations",
+        element: (
+          <ProtectedRoute roles={["admin"]}>
+            <AdminReservationPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "history",
+        element: (
+          <ProtectedRoute roles={["admin"]}>
+            <AdminHistoryPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "users",
+        element: (
+          <ProtectedRoute roles={["admin"]}>
+            <AdminUsersPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

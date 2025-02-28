@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Home, BarChart2, Users, FileText, Box, Settings } from "lucide-react";
+import { Home, Users, FileText, Box } from "lucide-react";
 
 const SidebarAdmin = ({ isOpen, mobile = false }) => {
   const sidebarVariants = {
@@ -28,32 +28,22 @@ const SidebarAdmin = ({ isOpen, mobile = false }) => {
     {
       icon: <Home className="mr-2 h-4 w-4" />,
       text: "Dashboard",
-      path: "/admin",
+      path: "/admin/dashboard",
     },
     {
-      icon: <BarChart2 className="mr-2 h-4 w-4" />,
-      text: "Analytics",
-      path: "/admin/analytics",
+      icon: <Box className="mr-2 h-4 w-4" />,
+      text: "Reservations",
+      path: "/admin/reservations",
+    },
+    {
+      icon: <FileText className="mr-2 h-4 w-4" />,
+      text: "History",
+      path: "/admin/history",
     },
     {
       icon: <Users className="mr-2 h-4 w-4" />,
       text: "Users",
       path: "/admin/users",
-    },
-    {
-      icon: <FileText className="mr-2 h-4 w-4" />,
-      text: "Reports",
-      path: "/admin/reports",
-    },
-    {
-      icon: <Box className="mr-2 h-4 w-4" />,
-      text: "Products",
-      path: "/admin/products",
-    },
-    {
-      icon: <Settings className="mr-2 h-4 w-4" />,
-      text: "Settings",
-      path: "/admin/settings",
     },
   ];
 

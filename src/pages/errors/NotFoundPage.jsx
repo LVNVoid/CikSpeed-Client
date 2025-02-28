@@ -1,4 +1,3 @@
-import React from "react";
 import { Search, Home, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +36,12 @@ const NotFoundPage = () => {
           </Alert>
         </CardContent>
         <CardFooter className="flex gap-2">
-          <Button className="flex-1" variant="outline" size="lg">
+          <Button
+            className="flex-1"
+            variant="outline"
+            size="lg"
+            onClick={() => navigate(-1)}
+          >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Kembali
           </Button>
@@ -45,7 +49,7 @@ const NotFoundPage = () => {
             className="flex-1"
             variant="default"
             size="lg"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           >
             <Home className="mr-2 h-4 w-4" />
             Beranda

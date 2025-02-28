@@ -1,5 +1,3 @@
-// src/components/Header.jsx
-import { useTheme } from "next-themes";
 import { Bell, Sun, Moon, User, Settings, LogOut, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,8 +9,6 @@ import {
 import { ModeToggle } from "../mode-toggle";
 
 const HeaderAdmin = ({ toggleSidebar }) => {
-  const { setTheme } = useTheme();
-
   return (
     <header className="fixed w-full h-16 bg-background shadow-sm z-50 flex items-center justify-between px-4">
       <div className="flex items-center">
@@ -35,21 +31,7 @@ const HeaderAdmin = ({ toggleSidebar }) => {
           <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-primary"></span>
         </Button>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <ModeToggle />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setTheme("light")}>
-              <Sun className="mr-2 h-4 w-4" />
-              <span>Light</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("dark")}>
-              <Moon className="mr-2 h-4 w-4" />
-              <span>Dark</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ModeToggle />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

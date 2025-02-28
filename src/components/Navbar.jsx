@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,50 +20,24 @@ import {
   Home,
   Settings,
 } from "lucide-react";
-import api from "@/services/api";
+import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
+import { useState } from "react";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const { user, logout } = useAuth(); // Gunakan useAuth untuk mendapatkan user dan fungsi logout
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const userData = localStorage.getItem("user");
-
-    if (userData) {
-      setIsLoggedIn(true);
-      setUser(JSON.parse(userData));
-    }
-  }, []);
-
   // Tutup menu mobile saat berpindah halaman
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const handleLogout = async () => {
     try {
-      // Mengirim permintaan POST ke endpoint logout
-      await api.post("/auth/logout");
-
-      // Menghapus token JWT dari cookie
-      document.cookie =
-        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-      // Menghapus user dari localStorage
-      localStorage.removeItem("user");
-
-      // Mengatur status login dan user
-      setIsLoggedIn(false);
-      setUser(null);
-
-      // Navigasi ke halaman login
-      navigate("/login");
+      await logout(); // Gunakan fungsi logout dari useAuth
+      navigate("/login"); // Navigasi ke halaman login setelah logout
     } catch (error) {
       console.error("Logout failed:", error);
-      // Anda bisa menambahkan penanganan kesalahan di sini jika diperlukan
     }
   };
 
@@ -83,14 +56,14 @@ const Navbar = () => {
   };
 
   const menuItems = [
-    { label: "Beranda", path: "/home", icon: Home, visible: isLoggedIn },
+    { label: "Beranda", path: "/home", icon: Home, visible: !!user },
     {
       label: "Reservasi",
       path: "/reservations",
       icon: Calendar,
-      visible: isLoggedIn,
+      visible: !!user,
     },
-    { label: "Riwayat", path: "/history", icon: History, visible: isLoggedIn },
+    { label: "Riwayat", path: "/history", icon: History, visible: !!user },
   ];
 
   return (
@@ -122,8 +95,8 @@ const Navbar = () => {
                     to={item.path}
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-md font-medium transition-colors ${
                       isActive(item.path)
-                        ? "text-primary bg-primary/5"
-                        : "text-foreground/80 hover:text-primary hover:bg-primary/5"
+                        ? "text-foreground bg-foreground/5"
+                        : "text-foreground/80 hover:text-foreground hover:bg-foreground/5"
                     }`}
                   >
                     <item.icon size={16} />
@@ -137,7 +110,7 @@ const Navbar = () => {
         {/* User Section */}
         <div className="hidden sm:flex items-center gap-3">
           <ModeToggle />
-          {isLoggedIn ? (
+          {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -249,13 +222,14 @@ const Navbar = () => {
                       ? "text-primary bg-primary/10"
                       : "hover:bg-primary/5"
                   }`}
+                  onClick={closeMobileMenu}
                 >
                   <item.icon size={18} />
                   {item.label}
                 </Link>
               ))}
 
-            {isLoggedIn ? (
+            {user ? (
               <>
                 <div className="h-px bg-border my-2"></div>
                 <Link
@@ -265,6 +239,7 @@ const Navbar = () => {
                       ? "text-primary bg-primary/10"
                       : "hover:bg-primary/5"
                   }`}
+                  onClick={closeMobileMenu}
                 >
                   <User size={18} />
                   Profil Saya
@@ -276,6 +251,7 @@ const Navbar = () => {
                       ? "text-primary bg-primary/10"
                       : "hover:bg-primary/5"
                   }`}
+                  onClick={closeMobileMenu}
                 >
                   <Settings size={18} />
                   Pengaturan
@@ -290,12 +266,16 @@ const Navbar = () => {
               </>
             ) : (
               <div className="flex flex-col gap-2 pt-2">
-                <Link to="/login" className="w-full">
+                <Link to="/login" className="w-full" onClick={closeMobileMenu}>
                   <Button variant="outline" className="w-full">
                     Masuk
                   </Button>
                 </Link>
-                <Link to="/register" className="w-full">
+                <Link
+                  to="/register"
+                  className="w-full"
+                  onClick={closeMobileMenu}
+                >
                   <Button className="w-full">Daftar</Button>
                 </Link>
               </div>

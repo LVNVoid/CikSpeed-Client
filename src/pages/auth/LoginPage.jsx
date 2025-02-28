@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import { useAuth } from "@/contexts/AuthContext"; // Pastikan path ini benar
 
 // Import komponen shadcn/ui
 import {
@@ -15,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useAuth } from "@/contexts/authContext";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const [phone, setPhone] = useState("");
@@ -36,10 +37,12 @@ const LoginPage = () => {
         password,
       });
 
-      // Simpan data user ke AuthContext dan localStorage
       login(response.data.user);
 
-      navigate("/"); // Redirect ke halaman utama setelah login
+      navigate("/home");
+      toast.success(
+        `Login berhasil. Selamat datang, ${response.data.user.name}!`
+      );
     } catch (error) {
       setError(
         error.response?.data?.error || "Login gagal. Silakan coba lagi."
@@ -99,7 +102,7 @@ const LoginPage = () => {
             Belum punya akun?{" "}
             <button
               onClick={() => navigate("/register")}
-              className="text-emerald-500 hover:text-emerald-700"
+              className="text-primary font-medium  hover:text-primary/80"
             >
               Daftar disini
             </button>

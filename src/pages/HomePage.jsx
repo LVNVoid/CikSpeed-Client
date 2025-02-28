@@ -89,11 +89,11 @@ const HomePage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-800 rounded-lg shadow-lg mb-8 p-6 text-white">
+      <div className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold">
           Selamat Datang, {user?.name || "Pengguna"}!
         </h1>
-        <p className="mt-2">
+        <p className="mt-2 text-muted-foreground">
           Selamat datang di layanan reservasi servis motor kami. Kami siap
           melayani kebutuhan perawatan kendaraan Anda.
         </p>

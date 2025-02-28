@@ -76,9 +76,9 @@ const pulseAnimation = {
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Hero Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 relative overflow-hidden">
+      <section className="py-16 md:py-24 bg-gradient-to-r from-zinc-50 to-zinc-50 dark:from-zinc-950/30 dark:to-zinc-950/30 relative overflow-hidden">
         {/* Decorative Shape */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
@@ -91,7 +91,7 @@ const LandingPage = () => {
             ease: "linear",
           }}
         >
-          <div className="w-[800px] h-[800px] bg-gradient-to-r from-teal-100 to-emerald-100 dark:from-teal-800/20 dark:to-emerald-800/20 rounded-full opacity-20 transform -translate-y-1/2 -translate-x-1/2"></div>
+          <div className="w-[800px] h-[800px] bg-gradient-to-r from-purple-100 to-purple-100 dark:from-purple-800/20 dark:to-purple-800/20 rounded-full opacity-20 transform -translate-y-1/2 -translate-x-1/2"></div>
         </motion.div>
 
         <div className="container mx-auto px-4 flex flex-col items-center text-center relative z-10">
@@ -102,7 +102,7 @@ const LandingPage = () => {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900 dark:text-white">
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-foreground">
               Reservasi Servis Motor Jadi Lebih Mudah
             </h1>
             <p className="text-lg mb-8 text-gray-600 dark:text-gray-300">
@@ -118,7 +118,7 @@ const LandingPage = () => {
                 >
                   <Button
                     size="lg"
-                    className="px-8 bg-teal-600 hover:bg-teal-700 dark:bg-teal-700 dark:hover:bg-teal-600"
+                    className="px-8 bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-600 text-white"
                   >
                     Daftar Sekarang
                   </Button>
@@ -132,7 +132,7 @@ const LandingPage = () => {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-teal-600 text-teal-600 hover:bg-teal-50 dark:border-teal-500 dark:text-teal-500 dark:hover:bg-teal-950/50"
+                    className="border-purple-600 text-purple-600 hover:bg-purple-50 dark:border-purple-500 dark:text-purple-500 dark:hover:bg-purple-950/50"
                   >
                     Masuk
                   </Button>
@@ -140,50 +140,14 @@ const LandingPage = () => {
               </Link>
             </div>
           </motion.div>
-
-          {/* Icons Grid as Decoration */}
-          <motion.div
-            className="mt-12 grid grid-cols-3 gap-8 opacity-50"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            <motion.div
-              variants={pulseAnimation}
-              initial="initial"
-              animate="animate"
-              className="w-12 h-12 bg-teal-100 dark:bg-teal-800/30 rounded-lg flex items-center justify-center"
-            >
-              <Calendar className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-            </motion.div>
-            <motion.div
-              variants={pulseAnimation}
-              initial="initial"
-              animate="animate"
-              className="w-12 h-12 bg-emerald-100 dark:bg-emerald-800/30 rounded-lg flex items-center justify-center"
-              style={{ animationDelay: "0.5s" }}
-            >
-              <Clock className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-            </motion.div>
-            <motion.div
-              variants={pulseAnimation}
-              initial="initial"
-              animate="animate"
-              className="w-12 h-12 bg-teal-100 dark:bg-teal-800/30 rounded-lg flex items-center justify-center"
-              style={{ animationDelay: "1s" }}
-            >
-              <CheckCircle className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-            </motion.div>
-          </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-16 bg-white dark:bg-gray-900">
+      <section id="features" className="py-16 bg-background text-foreground">
         <div className="container mx-auto px-4">
           <motion.h2
-            className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white"
+            className="text-3xl font-bold text-center mb-12 text-foreground"
             variants={fadeIn}
             initial="hidden"
             whileInView="visible"
@@ -200,25 +164,19 @@ const LandingPage = () => {
           >
             {[
               {
-                icon: (
-                  <Calendar className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-                ),
+                icon: <Calendar className="h-6 w-6 text-foreground" />,
                 title: "Reservasi Online",
                 description:
                   "Jadwalkan servis motor Anda kapan saja dan di mana saja tanpa perlu datang ke bengkel.",
               },
               {
-                icon: (
-                  <Clock className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-                ),
+                icon: <Clock className="h-6 w-6 text-foreground" />,
                 title: "Pilih Slot Waktu",
                 description:
                   "Pilih waktu yang tersedia sesuai kebutuhan Anda tanpa perlu mengantri.",
               },
               {
-                icon: (
-                  <CheckCircle className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-                ),
+                icon: <CheckCircle className="h-6 w-6 text-foreground" />,
                 title: "Konfirmasi Instan",
                 description:
                   "Dapatkan konfirmasi reservasi secara instan setelah melakukan booking.",
@@ -229,10 +187,10 @@ const LandingPage = () => {
                 variants={slideInFromBottom}
                 whileHover={{ y: -10, transition: { duration: 0.3 } }}
               >
-                <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:shadow-none dark:border dark:border-gray-700">
+                <Card className="border-0 min-h-[250px] transition-shadow duration-300 bg-background dark:border border-primary/40">
                   <CardContent className="pt-6">
                     <motion.div
-                      className="w-14 h-14 rounded-full bg-teal-100 dark:bg-teal-800/30 flex items-center justify-center mb-4 mx-auto"
+                      className="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-800/30 flex items-center justify-center mb-4 mx-auto"
                       whileHover={{
                         rotate: [0, 10, -10, 0],
                         transition: { duration: 0.5 },
@@ -240,7 +198,7 @@ const LandingPage = () => {
                     >
                       {feature.icon}
                     </motion.div>
-                    <h3 className="text-xl font-bold text-center mb-2 text-gray-900 dark:text-white">
+                    <h3 className="text-xl font-bold text-center mb-2 text-foreground">
                       {feature.title}
                     </h3>
                     <p className="text-center text-gray-600 dark:text-gray-300">
@@ -255,10 +213,10 @@ const LandingPage = () => {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-16 bg-gray-50 dark:bg-gray-800">
+      <section id="how-it-works" className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <motion.h2
-            className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white"
+            className="text-3xl font-bold text-center mb-12 text-foreground"
             variants={fadeIn}
             initial="hidden"
             whileInView="visible"
@@ -275,37 +233,27 @@ const LandingPage = () => {
           >
             {[
               {
-                icon: (
-                  <User className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-                ),
+                icon: <User className="h-6 w-6 text-foreground" />,
                 title: "Daftar/Masuk",
                 description: "Buat akun atau masuk ke akun yang sudah ada",
               },
               {
-                icon: (
-                  <MotorbikeFilled className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-                ),
+                icon: <MotorbikeFilled className="h-6 w-6 text-foreground" />,
                 title: "Tambah Kendaraan",
                 description: "Masukkan data motor Anda",
               },
               {
-                icon: (
-                  <Clipboard className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-                ),
+                icon: <Clipboard className="h-6 w-6 text-foreground" />,
                 title: "Deskripsi Masalah",
                 description: "Jelaskan gejala yang dialami motor Anda",
               },
               {
-                icon: (
-                  <Calendar className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-                ),
+                icon: <Calendar className="h-6 w-6 text-foreground" />,
                 title: "Pilih Waktu",
                 description: "Pilih tanggal dan slot waktu yang tersedia",
               },
               {
-                icon: (
-                  <Check className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-                ),
+                icon: <Check className="h-6 w-6 text-foreground" />,
                 title: "Konfirmasi",
                 description: "Terima konfirmasi dari admin bengkel",
               },
@@ -317,7 +265,7 @@ const LandingPage = () => {
                 whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
               >
                 <motion.div
-                  className="w-16 h-16 rounded-full bg-teal-100 dark:bg-teal-800/30 flex items-center justify-center mb-4"
+                  className="w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-800/30 flex items-center justify-center mb-4"
                   whileHover={{
                     boxShadow: "0 0 0 8px rgba(20, 184, 166, 0.2)",
                     transition: {
@@ -329,7 +277,7 @@ const LandingPage = () => {
                 >
                   {step.icon}
                 </motion.div>
-                <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+                <h3 className="text-lg font-semibold mb-2 text-foreground">
                   {step.title}
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -361,7 +309,7 @@ const LandingPage = () => {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="text-teal-500 dark:text-teal-400"
+                        className="text-purple-500 dark:text-purple-400"
                       />
                     </svg>
                   </motion.div>
@@ -385,7 +333,7 @@ const LandingPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button className="bg-teal-600 hover:bg-teal-700 dark:bg-teal-700 dark:hover:bg-teal-600">
+                <Button className="bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-600">
                   Mulai Reservasi Sekarang
                 </Button>
               </motion.div>
@@ -395,10 +343,10 @@ const LandingPage = () => {
       </section>
 
       {/* FAQ Section with Accordion */}
-      <section id="faq" className="py-16 bg-white dark:bg-gray-900">
+      <section id="faq" className="py-16 bg-background text-foreground">
         <div className="container mx-auto px-4">
           <motion.h2
-            className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white"
+            className="text-3xl font-bold text-center mb-12 text-foreground"
             variants={fadeIn}
             initial="hidden"
             whileInView="visible"
@@ -440,9 +388,9 @@ const LandingPage = () => {
                 <AccordionItem
                   key={index}
                   value={`item-${index}`}
-                  className="border-b border-teal-200 dark:border-teal-800"
+                  className="border-b border-purple-200 dark:border-purple-800"
                 >
-                  <AccordionTrigger className="text-left font-bold text-lg text-gray-900 dark:text-white hover:text-teal-600 dark:hover:text-teal-400">
+                  <AccordionTrigger className="text-left font-bold text-lg text-foreground hover:text-purple-600 dark:hover:text-purple-400">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-gray-600 dark:text-gray-300">

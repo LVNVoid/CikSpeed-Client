@@ -24,8 +24,6 @@ import {
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/components/theme-provider";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
@@ -41,6 +39,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import CustomCalendar from "@/components/ui/CustomCalendar";
 
 const CreateReservation = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -56,7 +55,6 @@ const CreateReservation = () => {
   const [isOtherSymptom, setIsOtherSymptom] = useState(false);
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
-  const { theme } = useTheme();
 
   const formattedDate = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
 
@@ -180,7 +178,12 @@ const CreateReservation = () => {
 
   const today = new Date();
   const tomorrow = addDays(today, 1);
-  const disabledDays = { before: tomorrow };
+
+  // Function to check if a date should be disabled
+  const isDateDisabled = (date) => {
+    if (!date) return false;
+    return date < tomorrow;
+  };
 
   // Get selected vehicle details
   const selectedVehicle = userVehicles.find((v) => v.id === selectedVehicleId);
@@ -197,14 +200,14 @@ const CreateReservation = () => {
   );
 
   return (
-    <div className="container max-w-4xl mx-auto px-4 py-6">
-      <Card className="border-primary/20 shadow-md">
-        <CardHeader className="bg-primary text-primary-foreground dark:bg-primary/90 rounded-t-lg">
+    <div className="container">
+      <Card className="border-none">
+        <CardHeader className="bg-background text-foreground rounded-t-lg">
           <CardTitle className="text-xl md:text-2xl flex items-center">
             <WrenchIcon className="mr-2 h-5 w-5 md:h-6 md:w-6 flex-shrink-0" />
             <span>Buat Reservasi</span>
           </CardTitle>
-          <CardDescription className="text-primary-foreground/80">
+          <CardDescription className="text-muted-foreground">
             Jadwalkan servis untuk kendaraan Anda
           </CardDescription>
         </CardHeader>
@@ -213,7 +216,7 @@ const CreateReservation = () => {
           <CardContent className="space-y-8 pt-6">
             {/* Vehicle Selection Section */}
             {renderSection(
-              <CarIcon className="h-5 w-5 text-primary flex-shrink-0" />,
+              <CarIcon className="h-5 w-5 text-foreground flex-shrink-0" />,
               "Vehicle Information",
               <div>
                 <Label htmlFor="vehicle-select" className="text-sm font-medium">
@@ -308,7 +311,7 @@ const CreateReservation = () => {
 
             {/* Symptoms Selection Section */}
             {renderSection(
-              <ClockIcon className="h-5 w-5 text-primary flex-shrink-0" />,
+              <ClockIcon className="h-5 w-5 text-foreground flex-shrink-0" />,
               "Detail Servis",
               <>
                 <Label className="mb-2 block text-sm font-medium">
@@ -351,7 +354,7 @@ const CreateReservation = () => {
                 <div className="mt-6 border border-warning/50 bg-muted/20 p-4 rounded-md">
                   <div className="flex items-center gap-2">
                     <AlertCircleIcon className="h-5 w-5 text-warning flex-shrink-0" />
-                    <span className="text-lg font-semibold text-primary">
+                    <span className="text-lg font-semibold text-foreground">
                       Gejala lain / Deskripsi Reservasi
                     </span>
                   </div>
@@ -428,97 +431,96 @@ const CreateReservation = () => {
 
             {/* Schedule Section */}
             {renderSection(
-              <CalendarIcon className="h-5 w-5 text-primary flex-shrink-0" />,
+              <CalendarIcon className="h-5 w-5 text-foreground flex-shrink-0" />,
               "Jadwal Service",
-              <>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="date" className="text-sm font-medium">
-                      Pilih Tanggal
-                    </Label>
-                    <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start text-left font-normal mt-1",
-                            !selectedDate && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {selectedDate ? (
-                            format(selectedDate, "PPP", { locale: id })
-                          ) : (
-                            <span>Pilih tanggal</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={(date) => {
-                            setSelectedDate(date);
-                            if (!isOtherSymptom) {
-                              setTime("");
-                            }
-                            setCalendarOpen(false);
-                          }}
-                          disabled={disabledDays}
-                          initialFocus
-                          className="border rounded-md shadow-sm"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  {selectedDate && !isOtherSymptom && (
-                    <div>
-                      <Label className="text-sm font-medium">
-                        Pilih waktu operasional
-                      </Label>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-2">
-                        {availableSlots.length > 0 ? (
-                          availableSlots.map((slot) => {
-                            const isDisabled =
-                              serviceType === "major" &&
-                              !["13:00", "15:00"].includes(slot);
-
-                            return (
-                              <Button
-                                key={slot}
-                                type="button"
-                                variant={time === slot ? "default" : "outline"}
-                                className={cn(
-                                  "py-2 h-auto text-sm w-full",
-                                  isDisabled && "opacity-50 cursor-not-allowed",
-                                  time === slot && "font-medium"
-                                )}
-                                onClick={() => !isDisabled && setTime(slot)}
-                                disabled={isDisabled}
-                              >
-                                {slot}
-                              </Button>
-                            );
-                          })
-                        ) : (
-                          <p className="col-span-full text-center text-muted-foreground text-sm py-2">
-                            {isLoading
-                              ? "Loading slots..."
-                              : "No available slots for this date"}
-                          </p>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="date" className="text-sm font-medium">
+                    Pilih Tanggal
+                  </Label>
+                  <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal mt-1",
+                          !selectedDate && "text-muted-foreground"
                         )}
-                      </div>
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDate ? (
+                          format(selectedDate, "PPP", { locale: id })
+                        ) : (
+                          <span>Pilih tanggal</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      {/* Replace the original Calendar with our CustomCalendar */}
+                      <CustomCalendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(date) => {
+                          setSelectedDate(date);
+                          if (!isOtherSymptom) {
+                            setTime("");
+                          }
+                          setCalendarOpen(false);
+                        }}
+                        disabled={(date) => isDateDisabled(date)}
+                        initialFocus
+                        className="border rounded-md"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
 
-                      {serviceType === "major" && (
-                        <p className="text-xs italic text-muted-foreground mt-2">
-                          Servis besar hanya tersedia pada jam 13:00 dan 15:00
+                {selectedDate && !isOtherSymptom && (
+                  <div className="flex justify-between">
+                    <Label className="text-sm font-medium ">
+                      Pilih waktu operasional
+                    </Label>
+                    <div className="flex overflow-x-auto gap-2">
+                      {availableSlots.length > 0 ? (
+                        availableSlots.map((slot) => {
+                          const isDisabled =
+                            serviceType === "major" &&
+                            !["13:00", "15:00"].includes(slot);
+
+                          return (
+                            <Button
+                              key={slot}
+                              type="button"
+                              variant={time === slot ? "default" : "outline"}
+                              className={cn(
+                                "py-2 h-auto text-sm whitespace-nowrap", // Menambahkan whitespace-nowrap agar teks tidak wrap
+                                isDisabled && "opacity-50 cursor-not-allowed",
+                                time === slot && "font-medium"
+                              )}
+                              onClick={() => !isDisabled && setTime(slot)}
+                              disabled={isDisabled}
+                            >
+                              {slot}
+                            </Button>
+                          );
+                        })
+                      ) : (
+                        <p className="text-center text-muted-foreground text-sm py-2">
+                          {isLoading
+                            ? "Loading slots..."
+                            : "No available slots for this date"}
                         </p>
                       )}
                     </div>
-                  )}
-                </div>
-              </>
+
+                    {serviceType === "major" && (
+                      <p className="text-xs italic text-muted-foreground mt-2">
+                        Servis besar hanya tersedia pada jam 13:00 dan 15:00
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
           </CardContent>
 

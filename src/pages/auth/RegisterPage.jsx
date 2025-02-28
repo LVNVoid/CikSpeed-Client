@@ -10,13 +10,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useAuth } from "@/contexts/authContext";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -26,26 +26,34 @@ const RegisterPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth(); // Ambil fungsi login dari AuthContext
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
+    // Validasi nomor telepon
+    if (!/^\d+$/.test(phone)) {
+      setError("Nomor telepon harus berupa angka.");
+      toast.error("Nomor telepon harus berupa angka.");
+      setLoading(false);
+      return;
+    }
+
     try {
+      navigate("/login");
       const response = await api.post("/auth/register", {
         name,
         phone,
         address,
         password,
       });
-
-      // Simpan data user ke AuthContext dan localStorage
-      login(response.data.user);
-
-      navigate("/"); // Redirect ke halaman utama setelah registrasi
-      toast.success("Registrasi berhasil.");
+      toast.success("Registrasi berhasil. Silakan login.");
+      navigate("/login", {
+        state: {
+          message: "Registrasi berhasil. Silakan login.",
+        },
+      });
     } catch (error) {
       setError(
         error.response?.data?.error || "Registrasi gagal. Silakan coba lagi."
@@ -125,6 +133,17 @@ const RegisterPage = () => {
             </Button>
           </form>
         </CardContent>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm text-muted-foreground">
+            Sudah punya akun?{" "}
+            <button
+              onClick={() => navigate("/login")}
+              className="text-primary font-medium hover:text-primary/80"
+            >
+              Login disini
+            </button>
+          </p>
+        </CardFooter>
       </Card>
     </div>
   );

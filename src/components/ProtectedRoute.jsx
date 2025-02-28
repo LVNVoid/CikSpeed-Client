@@ -5,9 +5,8 @@ const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 
-  // Tampilkan loading spinner jika data user belum siap
   if (loading) {
-    return <div>Loading...</div>; // Atau tampilkan komponen loading
+    return <div>Loading...</div>;
   }
 
   // Jika user tidak ada, redirect ke halaman login
@@ -15,7 +14,7 @@ const ProtectedRoute = ({ children, roles }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Jika user ada, tetapi role tidak sesuai, redirect ke halaman unauthorized
+  // Jika roles diberikan, pastikan user memiliki role yang sesuai
   if (roles && !roles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
