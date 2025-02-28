@@ -65,7 +65,7 @@ const ReservationPage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <Card className="w-full max-w-4xl mx-4">
+      <Card className="w-full max-w-4xl mx-4 bg-background border border-primary/20">
         <CardHeader>
           <CardTitle>Detail Reservasi</CardTitle>
         </CardHeader>
@@ -128,14 +128,14 @@ const ReservationPage = () => {
                 </span>
 
                 {reservation.Symptoms && reservation.Symptoms.length > 0 && (
-                  <div>
+                  <>
                     <p className="font-medium text-muted-foreground">Gejala</p>
                     <ul className="list-disc list-inside">
                       {reservation.Symptoms.map((symptom) => (
                         <li key={symptom.id}>{symptom.name}</li>
                       ))}
                     </ul>
-                  </div>
+                  </>
                 )}
                 {reservation.description && (
                   <>

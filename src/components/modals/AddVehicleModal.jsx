@@ -47,7 +47,7 @@ const AddVehicleModal = ({ onVehicleAdded }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">Tambah Kendaraan</Button>
+        <Button variant="outline">Tambah Kendaraan</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

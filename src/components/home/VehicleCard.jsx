@@ -5,7 +5,7 @@ import AddVehicleModal from "@/components/modals/AddVehicleModal";
 
 const VehicleCard = ({ vehicles, onDeleteVehicle, onVehicleAdded }) => {
   return (
-    <Card className="md:col-span-1 border-gray-200 dark:border-gray-700">
+    <Card className="md:col-span-1 bg-background">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CarIcon size={20} />
@@ -18,14 +18,14 @@ const VehicleCard = ({ vehicles, onDeleteVehicle, onVehicleAdded }) => {
             {vehicles.map((vehicle) => (
               <div
                 key={vehicle.id}
-                className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg dark:bg-gray-800/50"
+                className="p-4 border bg-primary/10 border-primary/70 rounded-lg "
               >
                 <p className="font-bold">
                   {vehicle.brand} {vehicle.type}
                 </p>
                 <div className="mt-2 space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                    <span className="text-sm text-muted-foreground">
                       Tahun Produksi ({vehicle.productionYear})
                     </span>
                     <span className="font-medium">
@@ -46,14 +46,13 @@ const VehicleCard = ({ vehicles, onDeleteVehicle, onVehicleAdded }) => {
           </div>
         ) : (
           <div className="text-center py-6">
-            <CarIcon
-              size={40}
-              className="mx-auto text-gray-300 dark:text-gray-600 mb-2"
-            />
-            <p className="text-gray-500 dark:text-gray-400">
-              Anda belum menambahkan kendaraan
+            <CarIcon size={40} className="mx-auto mb-2" />
+            <p className="text-muted-foreground">
+              Anda memiliki data kendaraan
             </p>
-            <AddVehicleModal onVehicleAdded={onVehicleAdded} />
+            <div className="mt-4">
+              <AddVehicleModal onVehicleAdded={onVehicleAdded} />
+            </div>
           </div>
         )}
       </CardContent>

@@ -20,7 +20,7 @@ import {
 
 const ReservationCard = ({ reservation }) => {
   return (
-    <Card className="md:col-span-1 border-gray-200 dark:border-gray-700">
+    <Card className="md:col-span-1 bg-background">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <WrenchIcon size={20} /> Reservasi Aktif
@@ -85,7 +85,7 @@ const ReservationCard = ({ reservation }) => {
             )}
 
             {reservation.Vehicle ? (
-              <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mt-4">
+              <div className="p-3 bg-background border border-primary/30 bg-primary/10 rounded-lg mt-4">
                 <h4 className="font-medium text-sm">Kendaraan:</h4>
                 <p>
                   {reservation.Vehicle.brand} {reservation.Vehicle.type} (
@@ -93,14 +93,14 @@ const ReservationCard = ({ reservation }) => {
                 </p>
               </div>
             ) : (
-              <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mt-4">
+              <div className="p-3 bg-background border border-primary/30 bg-primary/10 rounded-lg mt-4">
                 <h4 className="font-medium text-sm">Kendaraan:</h4>
                 <p>Data kendaraan tidak tersedia</p>
               </div>
             )}
 
             {reservation.Symptoms && reservation.Symptoms.length > 0 ? (
-              <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="p-3 bg-background border border-primary/30 bg-primary/10 rounded-lg">
                 <h4 className="font-medium text-sm">Gejala:</h4>
                 <ul className="text-sm list-disc list-inside">
                   {reservation.Symptoms.map((symptom) => (

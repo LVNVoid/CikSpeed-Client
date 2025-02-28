@@ -1,40 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  CalendarIcon,
-  ClockIcon,
-  WrenchIcon,
-  MapPinIcon,
-  PhoneIcon,
-  UserIcon,
-  CarIcon,
-  Loader,
-  CircleCheck,
-  CircleX,
-  Trash,
-} from "lucide-react";
+
 import api from "@/services/api";
 
 // Components
-import AddVehicleModal from "@/components/modals/AddVehicleModal";
 import UserInfoCard from "@/components/home/UserInfoCard";
 import VehicleCard from "@/components/home/VehicleCard";
 import ReservationCard from "@/components/home/ReservationCard";
-import ServicesCard from "@/components/home/ServicesCard";
-import PromoCard from "@/components/home/PromoCard";
-import StatsCard from "@/components/home/StatsCard";
 import PageSkeleton from "@/components/skeletons/PageSkeleton";
 
 const HomePage = () => {

@@ -83,7 +83,7 @@ const Navbar = () => {
   };
 
   const menuItems = [
-    { label: "Beranda", path: "/", icon: Home, visible: true },
+    { label: "Beranda", path: "/home", icon: Home, visible: isLoggedIn },
     {
       label: "Reservasi",
       path: "/reservations",
@@ -97,23 +97,8 @@ const Navbar = () => {
     <div className="container mx-auto py-3 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-sm bg-background/80 dark:bg-background/90">
       <div className="flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2 text-xl font-bold">
-          <svg
-            className="w-6 h-6 text-primary"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M14.121 15.536c-1.171 1.952-3.07 1.952-4.242 0-1.172-1.953-1.172-5.118 0-7.071 1.171-1.952 3.07-1.952 4.242 0M8 10.5h4m-4 3h4m9-1.5a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
           <span>
-            <span className="text-primary">Motor</span>
-            <span className="text-foreground">Service</span>
+            <span className="text-gradient">CikSpeed</span>
           </span>
         </Link>
 
