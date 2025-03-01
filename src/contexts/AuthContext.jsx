@@ -1,3 +1,4 @@
+import api from "@/services/api";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
@@ -35,9 +36,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
+  const logout = async () => {
+    try {
+      await api.post("/auth/logout");
+      setUser(null);
+      localStorage.removeItem("user");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (

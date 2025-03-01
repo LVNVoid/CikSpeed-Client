@@ -24,7 +24,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth(); // Ambil fungsi login dari AuthContext
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +39,14 @@ const LoginPage = () => {
 
       login(response.data.user);
 
-      navigate("/home");
+      if (
+        response.data.user.role === "admin" ||
+        response.data.user.role === "frontdesk"
+      ) {
+        navigate("/admin/dashboard");
+      } else if (response.data.user.role === "customer") {
+        navigate("/home");
+      }
       toast.success(
         `Login berhasil. Selamat datang, ${response.data.user.name}!`
       );

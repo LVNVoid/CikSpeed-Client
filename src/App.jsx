@@ -65,7 +65,7 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: (
-          <ProtectedRoute roles={["admin"]}>
+          <ProtectedRoute roles={`["admin", "frontdesk"]`}>
             <AdminDashboardPage />
           </ProtectedRoute>
         ),
@@ -73,7 +73,7 @@ const router = createBrowserRouter([
       {
         path: "reservations",
         element: (
-          <ProtectedRoute roles={["admin"]}>
+          <ProtectedRoute roles={["admin", "frontdesk"]}>
             <AdminReservationPage />
           </ProtectedRoute>
         ),
@@ -81,7 +81,7 @@ const router = createBrowserRouter([
       {
         path: "history",
         element: (
-          <ProtectedRoute roles={["admin"]}>
+          <ProtectedRoute roles={["admin", "frontdesk"]}>
             <AdminHistoryPage />
           </ProtectedRoute>
         ),
@@ -89,7 +89,7 @@ const router = createBrowserRouter([
       {
         path: "users",
         element: (
-          <ProtectedRoute roles={["admin"]}>
+          <ProtectedRoute roles={["admin", "frontdesk"]}>
             <AdminUsersPage />
           </ProtectedRoute>
         ),
