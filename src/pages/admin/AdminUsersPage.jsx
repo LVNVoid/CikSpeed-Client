@@ -20,6 +20,11 @@ import { Search, Filter } from "lucide-react";
 
 import api from "@/services/api";
 import { Badge } from "@/components/ui/badge";
+import {
+  capitalizeFirstLetter,
+  formatDate,
+  getRoleBadgeVariant,
+} from "@/lib/utils";
 
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -54,27 +59,6 @@ const UsersPage = () => {
 
     return matchesSearch && matchesRole;
   });
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("id-ID", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const getRoleBadgeVariant = (role) => {
-    switch (role) {
-      case "admin":
-        return "info";
-      case "frontdesk":
-        return "warning";
-      case "customer":
-        return "success";
-      default:
-        return "default";
-    }
-  };
 
   return (
     <motion.div
@@ -178,7 +162,7 @@ const UsersPage = () => {
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
                       <Badge variant={getRoleBadgeVariant(user.role)}>
-                        {user.role}
+                        {capitalizeFirstLetter(user.role)}
                       </Badge>
                     </TableCell>
                     <TableCell className="whitespace-nowrap">

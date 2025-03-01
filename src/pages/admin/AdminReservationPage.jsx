@@ -23,7 +23,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Filter, Plus, Search, Settings } from "lucide-react";
+import { AlertCircle, Filter, RefreshCcw, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -32,14 +32,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import api from "@/services/api";
+import {
+  capitalizeFirstLetter,
+  getStatusBadgeVariant,
+  getTranslatedStatus,
+} from "@/lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const AdminReservationPage = () => {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
 
@@ -57,39 +63,50 @@ const AdminReservationPage = () => {
     return matchesSearch && matchesStatus;
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await api.get("/reservations");
-        setReservations(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchReservation = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await api.get("/reservations");
+      setReservations(response.data);
+    } catch (error) {
+      setError(
+        error.response?.data?.error ||
+          "Terjadi kesalahan saat mengambil data riwayat reservasi"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchReservation();
   }, []);
 
   const handleConfirm = (id) => {
-    // Handle confirm logic here
     console.log(`Confirmed reservation with id: ${id}`);
   };
 
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "success":
-        return <Badge variant="success">Selesai</Badge>;
-      case "pending":
-        return <Badge variant="warning">Menunggu</Badge>;
-      case "processing":
-        return <Badge variant="info">Sedang Diproses</Badge>;
-      case "cancelled":
-        return <Badge variant="destructive">Dibatalkan</Badge>;
+  const getServiceTypeBadge = (serviceType) => {
+    switch (serviceType) {
+      case "major":
+        return (
+          <Badge variant="info" className={"rounded-full"}>
+            Servis Besar
+          </Badge>
+        );
+      case "regular":
+        return (
+          <Badge variant="purple" className={"rounded-full"}>
+            Servis Ringan
+          </Badge>
+        );
       default:
-        return <Badge>{status}</Badge>;
+        return (
+          <Badge variant="default" className={"rounded-full"}>
+            {serviceType}
+          </Badge>
+        );
     }
   };
 
@@ -115,13 +132,22 @@ const AdminReservationPage = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-3xl text-foreground font-bold tracking-tight">
             Manajemen Reservasi
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-muted-foreground mt-1">
             Kelola semua permintaan reservasi pelanggan
           </p>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={fetchReservation}
+          disabled={loading}
+        >
+          <RefreshCcw className="w-4 h-4 mr-2" />
+          Refresh Data
+        </Button>
       </div>
 
       {/* Filters and Search */}
@@ -133,7 +159,7 @@ const AdminReservationPage = () => {
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 placeholder="Cari berdasarkan nama, telepon, atau jenis servis..."
                 className="pl-10"
@@ -143,7 +169,7 @@ const AdminReservationPage = () => {
             </div>
             <div className="flex gap-3">
               <Select value={filterStatus} onValueChange={setFilterStatus}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="px-3">
                   <div className="flex items-center gap-2">
                     <Filter className="w-4 h-4" />
                     <SelectValue placeholder="Filter" />
@@ -151,9 +177,8 @@ const AdminReservationPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Semua Status</SelectItem>
-                  <SelectItem value="success">Selesai</SelectItem>
-                  <SelectItem value="pending">Menunggu</SelectItem>
-                  <SelectItem value="processing">Sedang Diproses</SelectItem>
+                  <SelectItem value="success">Dikonfirmasi</SelectItem>
+                  <SelectItem value="pending">Menunggu Konfirmasi</SelectItem>
                   <SelectItem value="cancelled">Dibatalkan</SelectItem>
                 </SelectContent>
               </Select>
@@ -161,6 +186,21 @@ const AdminReservationPage = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Error Alert */}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        </motion.div>
+      )}
 
       {/* Table */}
       <Card>
@@ -190,7 +230,7 @@ const AdminReservationPage = () => {
                       <div className="flex justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
                       </div>
-                      <p className="mt-2 text-gray-500">
+                      <p className="mt-2 text-foreground">
                         Memuat data reservasi...
                       </p>
                     </TableCell>
@@ -198,14 +238,14 @@ const AdminReservationPage = () => {
                 ) : filteredReservations.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-8">
-                      <p className="text-gray-500">
+                      <p className="text-foreground">
                         Tidak ada reservasi yang ditemukan
                       </p>
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredReservations.map((reservation) => (
-                    <TableRow key={reservation.id} className="hover:bg-gray-50">
+                    <TableRow key={reservation.id} className="hover:bg-muted">
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Avatar className="h-9 w-9">
@@ -219,7 +259,7 @@ const AdminReservationPage = () => {
                             <p className="font-medium">
                               {reservation.User.name}
                             </p>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-foreground">
                               {reservation.User.phone}
                             </p>
                           </div>
@@ -233,10 +273,16 @@ const AdminReservationPage = () => {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <p className="font-medium">{reservation.serviceType}</p>
+                        {getServiceTypeBadge(reservation.serviceType)}
                       </TableCell>
                       <TableCell>
-                        {getStatusBadge(reservation.status)}
+                        <Badge
+                          variant={getStatusBadgeVariant(reservation.status)}
+                        >
+                          {capitalizeFirstLetter(
+                            getTranslatedStatus(reservation.status)
+                          )}
+                        </Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
@@ -286,7 +332,7 @@ const AdminReservationPage = () => {
           {/* Pagination
           {filteredReservations.length > 0 && (
             <div className="flex items-center justify-between mt-4">
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-foreground">
                 Menampilkan {filteredReservations.length} dari{" "}
                 {reservations.length} reservasi
               </div>

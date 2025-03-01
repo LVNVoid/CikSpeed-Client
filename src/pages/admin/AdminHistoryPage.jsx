@@ -23,6 +23,10 @@ import { Calendar, AlertCircle, RefreshCcw } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import api from "@/services/api";
+import {
+  getServiceTypeBadgeVariant,
+  getTranslatedServiceType,
+} from "@/lib/utils";
 
 const ReservationHistoryPage = () => {
   // State management
@@ -107,31 +111,6 @@ const ReservationHistoryPage = () => {
     }
   };
 
-  const translateServiceType = (type) => {
-    const typeLower = type.toLowerCase();
-    switch (typeLower) {
-      case "major":
-        return "Servis Besar";
-      case "minor":
-        return "Servis Kecil";
-      case "regular":
-        return "Servis Regular";
-      default:
-        return type;
-    }
-  };
-
-  // Statistics for the dashboard header
-  const statistics = {
-    totalReservations: reservations.length,
-    successReservations: reservations.filter(
-      (r) => r.status.toLowerCase() === "success"
-    ).length,
-    failedReservations: reservations.filter(
-      (r) => r.status.toLowerCase() === "failed"
-    ).length,
-  };
-
   // Skeleton loader for cards
   const ReservationSkeleton = () => (
     <div className="space-y-2">
@@ -181,7 +160,7 @@ const ReservationHistoryPage = () => {
       </motion.div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {loading
           ? Array(3)
               .fill(0)
@@ -230,7 +209,7 @@ const ReservationHistoryPage = () => {
                 </Card>
               </motion.div>
             ))}
-      </div>
+      </div> */}
 
       {/* Filter and Search Section */}
       <motion.div
@@ -361,10 +340,12 @@ const ReservationHistoryPage = () => {
                                       {translateStatus(reservation.status)}
                                     </Badge>
                                     <Badge
-                                      variant="outline"
-                                      className="capitalize"
+                                      variant={getServiceTypeBadgeVariant(
+                                        reservation.serviceType
+                                      )}
+                                      className={"rounded-full"}
                                     >
-                                      {translateServiceType(
+                                      {getTranslatedServiceType(
                                         reservation.serviceType
                                       )}
                                     </Badge>
