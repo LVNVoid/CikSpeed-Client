@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
-  Loader,
   Calendar,
   Clock,
   Car,
@@ -18,7 +17,6 @@ import {
   AlertCircle,
   Info,
   User,
-  Phone,
 } from "lucide-react";
 import {
   Dialog,
@@ -32,6 +30,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
 import api from "@/services/api";
+import { Button } from "@/components/ui/button";
 
 const HistoryReservationPage = () => {
   const [reservations, setReservations] = useState([]);
@@ -82,20 +81,50 @@ const HistoryReservationPage = () => {
       <Card className="w-full shadow-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
-            Riwayat Reservasi
+            Riwayat reservasi anda
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <div key={index} className="flex items-center space-x-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-[250px]" />
-                  <Skeleton className="h-4 w-[200px]" />
-                </div>
-              </div>
-            ))}
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-1/5">Tanggal & Waktu</TableHead>
+                  <TableHead className="w-1/6">Jenis Servis</TableHead>
+                  <TableHead className="w-1/5">Kendaraan</TableHead>
+                  <TableHead className="w-1/5">Gejala</TableHead>
+                  <TableHead className="w-1/6">Status</TableHead>
+                  <TableHead className="w-1/12">Detail</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-24 mt-1" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-32" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-40" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24" />
+                    </TableCell>
+                    <TableCell>
+                      <Button disabled className="bg-gray-300 text-gray-500">
+                        <Skeleton className="h-4 w-8" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>
@@ -105,7 +134,9 @@ const HistoryReservationPage = () => {
   return (
     <Card className="w-full shadow-md">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Riwayat Reservasi</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          Riwayat reservasi anda
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {reservations.length === 0 ? (

@@ -85,7 +85,7 @@ const ReservationCard = ({ reservation }) => {
             )}
 
             {reservation.Vehicle ? (
-              <div className="p-3 bg-background border border-primary/30 bg-primary/10 rounded-lg mt-4">
+              <div className="p-3 bg-background border rounded mt-4">
                 <h4 className="font-medium text-sm">Kendaraan:</h4>
                 <p>
                   {reservation.Vehicle.brand} {reservation.Vehicle.type} (
@@ -93,14 +93,14 @@ const ReservationCard = ({ reservation }) => {
                 </p>
               </div>
             ) : (
-              <div className="p-3 bg-background border border-primary/30 bg-primary/10 rounded-lg mt-4">
+              <div className="p-3 bg-background border rounded mt-4">
                 <h4 className="font-medium text-sm">Kendaraan:</h4>
                 <p>Data kendaraan tidak tersedia</p>
               </div>
             )}
 
             {reservation.Symptoms && reservation.Symptoms.length > 0 ? (
-              <div className="p-3 bg-background border border-primary/30 bg-primary/10 rounded-lg">
+              <div className="p-3 bg-background border rounded">
                 <h4 className="font-medium text-sm">Gejala:</h4>
                 <ul className="text-sm list-disc list-inside">
                   {reservation.Symptoms.map((symptom) => (
@@ -128,7 +128,7 @@ const ReservationCard = ({ reservation }) => {
       {reservation && (
         <CardFooter className="flex justify-between">
           <Button variant="outline">
-            <Link to={`/reservation/${reservation.id}`}>Lihat Detail</Link>
+            <Link to={`/reservations`}>Lihat Detail</Link>
           </Button>
           {reservation.status === "pending" && (
             <Button variant="destructive">Batalkan</Button>

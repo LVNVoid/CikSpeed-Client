@@ -16,10 +16,7 @@ const VehicleCard = ({ vehicles, onDeleteVehicle, onVehicleAdded }) => {
         {vehicles.length > 0 ? (
           <div className="space-y-4">
             {vehicles.map((vehicle) => (
-              <div
-                key={vehicle.id}
-                className="p-4 border bg-primary/10 border-primary/70 rounded-lg "
-              >
+              <div key={vehicle.id} className="p-4 border rounded">
                 <p className="font-bold">
                   {vehicle.brand} {vehicle.type}
                 </p>
