@@ -23,7 +23,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, Filter, RefreshCcw, Search } from "lucide-react";
+import {
+  AlertCircle,
+  CircleCheck,
+  Filter,
+  Loader,
+  RefreshCcw,
+  Search,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -33,6 +40,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import api from "@/services/api";
 import {
@@ -40,7 +48,8 @@ import {
   getStatusBadgeVariant,
   getTranslatedStatus,
 } from "@/lib/utils";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import ReservationDetailModal from "@/components/admin/modals/ReservationDetailModal";
+import EditReservationModal from "@/components/admin/modals/EditReservationModal";
 
 const AdminReservationPage = () => {
   const [reservations, setReservations] = useState([]);
@@ -48,13 +57,58 @@ const AdminReservationPage = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [detailModal, setDetailModal] = useState({
+    isOpen: false,
+    reservationId: null,
+  });
+
+  const openDetailModal = (id) => {
+    setDetailModal({
+      isOpen: true,
+      reservationId: id,
+    });
+  };
+
+  const closeDetailModal = () => {
+    setDetailModal({
+      isOpen: false,
+      reservationId: null,
+    });
+  };
+
+  const [editModal, setEditModal] = useState({
+    isOpen: false,
+    reservationId: null,
+  });
+
+  const openEditModal = (id) => {
+    setEditModal({
+      isOpen: true,
+      reservationId: id,
+    });
+  };
+
+  const closeEditModal = () => {
+    setEditModal({
+      isOpen: false,
+      reservationId: null,
+    });
+  };
+
+  const handleEditSuccess = () => {
+    fetchReservation(); // Refresh data setelah edit berhasil
+  };
 
   const filteredReservations = reservations.filter((reservation) => {
     // Filter by search query
     const matchesSearch =
-      reservation.User.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      reservation.User.phone.includes(searchQuery) ||
-      reservation.serviceType.toLowerCase().includes(searchQuery.toLowerCase());
+      (reservation.User?.name || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      (reservation.User?.phone || "").includes(searchQuery) ||
+      (reservation.serviceType || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
 
     // Filter by status
     const matchesStatus =
@@ -83,10 +137,6 @@ const AdminReservationPage = () => {
     fetchReservation();
   }, []);
 
-  const handleConfirm = (id) => {
-    console.log(`Confirmed reservation with id: ${id}`);
-  };
-
   const getServiceTypeBadge = (serviceType) => {
     switch (serviceType) {
       case "major":
@@ -104,22 +154,28 @@ const AdminReservationPage = () => {
       default:
         return (
           <Badge variant="default" className={"rounded-full"}>
-            {serviceType}
+            {serviceType || "Tidak diketahui"}
           </Badge>
         );
     }
   };
 
   const formatDate = (dateString) => {
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    };
-    return new Date(dateString).toLocaleDateString("id-ID", options);
+    if (!dateString) return "Tidak tersedia";
+
+    try {
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      return new Date(dateString).toLocaleDateString("id-ID", options);
+    } catch (error) {
+      return "Format tanggal tidak valid";
+    }
   };
 
   return (
@@ -177,7 +233,7 @@ const AdminReservationPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Semua Status</SelectItem>
-                  <SelectItem value="success">Dikonfirmasi</SelectItem>
+                  <SelectItem value="confirmed">Dikonfirmasi</SelectItem>
                   <SelectItem value="pending">Menunggu Konfirmasi</SelectItem>
                   <SelectItem value="cancelled">Dibatalkan</SelectItem>
                 </SelectContent>
@@ -250,17 +306,20 @@ const AdminReservationPage = () => {
                         <div className="flex items-center gap-3">
                           <Avatar className="h-9 w-9">
                             <AvatarFallback>
-                              {reservation.User.name
-                                .substring(0, 2)
-                                .toUpperCase()}
+                              {reservation.User?.name
+                                ? reservation.User.name
+                                    .substring(0, 2)
+                                    .toUpperCase()
+                                : "UN"}
                             </AvatarFallback>
                           </Avatar>
                           <div>
                             <p className="font-medium">
-                              {reservation.User.name}
+                              {reservation.User?.name || "Nama tidak tersedia"}
                             </p>
                             <p className="text-sm text-foreground">
-                              {reservation.User.phone}
+                              {reservation.User?.phone ||
+                                "No. Telp tidak tersedia"}
                             </p>
                           </div>
                         </div>
@@ -277,10 +336,18 @@ const AdminReservationPage = () => {
                       </TableCell>
                       <TableCell>
                         <Badge
-                          variant={getStatusBadgeVariant(reservation.status)}
+                          variant={getStatusBadgeVariant(
+                            reservation.status || "pending"
+                          )}
                         >
+                          {reservation.status === "pending" ? (
+                            <Loader className="mr-2 h-4 w-4 animate-spin" />
+                          ) : reservation.status === "confirmed" ? (
+                            <CircleCheck className="mr-2 h-4 w-4" />
+                          ) : null}
+
                           {capitalizeFirstLetter(
-                            getTranslatedStatus(reservation.status)
+                            getTranslatedStatus(reservation.status || "pending")
                           )}
                         </Badge>
                       </TableCell>
@@ -310,13 +377,16 @@ const AdminReservationPage = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Lihat Detail</DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => handleConfirm(reservation.id)}
+                              onClick={() => openDetailModal(reservation.id)}
                             >
-                              Konfirmasi
+                              Lihat Detail
                             </DropdownMenuItem>
-                            <DropdownMenuItem>Ubah Status</DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => openEditModal(reservation.id)}
+                            >
+                              Edit
+                            </DropdownMenuItem>
                             <DropdownMenuItem className="text-red-600">
                               Batalkan
                             </DropdownMenuItem>
@@ -329,34 +399,21 @@ const AdminReservationPage = () => {
               </TableBody>
             </Table>
           </div>
-          {/* Pagination
-          {filteredReservations.length > 0 && (
-            <div className="flex items-center justify-between mt-4">
-              <div className="text-sm text-foreground">
-                Menampilkan {filteredReservations.length} dari{" "}
-                {reservations.length} reservasi
-              </div>
-              <div className="flex gap-1">
-                <Button variant="outline" size="sm" disabled>
-                  Sebelumnya
-                </Button>
-                <Button variant="outline" size="sm" className="bg-blue-50">
-                  1
-                </Button>
-                <Button variant="outline" size="sm">
-                  2
-                </Button>
-                <Button variant="outline" size="sm">
-                  3
-                </Button>
-                <Button variant="outline" size="sm">
-                  Selanjutnya
-                </Button>
-              </div>
-            </div>
-          )} */}
         </CardContent>
       </Card>
+
+      {/* Reservation Detail Modal */}
+      <ReservationDetailModal
+        isOpen={detailModal.isOpen}
+        onClose={closeDetailModal}
+        reservationId={detailModal.reservationId}
+      />
+      <EditReservationModal
+        isOpen={editModal.isOpen}
+        onClose={closeEditModal}
+        reservationId={editModal.reservationId}
+        onSuccess={handleEditSuccess}
+      />
     </motion.div>
   );
 };

@@ -17,6 +17,10 @@ export const formatDate = (dateString) => {
   });
 };
 
+export const formatTime = (timeString) => {
+  return timeString.substring(0, 5);
+};
+
 export const getRoleBadgeVariant = (role) => {
   switch (role) {
     case "admin":
@@ -45,7 +49,7 @@ export const getStatusBadgeVariant = (status) => {
   switch (status) {
     case "pending":
       return "warning";
-    case "success":
+    case "confirmed":
       return "success";
     default:
       return "default";
@@ -69,9 +73,13 @@ export const getTranslatedServiceType = (type) => {
 export const getTranslatedStatus = (status) => {
   switch (status) {
     case "pending":
-      return "Menunggu Antrian";
-    case "success":
+      return "Menunggu Konfirmasi";
+    case "confirmed":
       return "Dikonfirmasi";
+    case "success":
+      return "Berhasil";
+    case "failed":
+      return "Gagal";
     default:
       return status;
   }
