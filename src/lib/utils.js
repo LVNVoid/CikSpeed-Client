@@ -61,10 +61,8 @@ export const getTranslatedServiceType = (type) => {
   switch (typeLower) {
     case "major":
       return "Servis Besar";
-    case "minor":
-      return "Servis Kecil";
     case "regular":
-      return "Servis Regular";
+      return "Servis Ringan";
     default:
       return type;
   }

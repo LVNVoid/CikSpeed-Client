@@ -4,9 +4,9 @@ import { toast } from "sonner";
 import api from "@/services/api";
 
 // Components
-import UserInfoCard from "@/components/home/UserInfoCard";
-import VehicleCard from "@/components/home/VehicleCard";
-import ReservationCard from "@/components/home/ReservationCard";
+import UserInfoCard from "@/components/customer/home/UserInfoCard";
+import VehicleCard from "@/components/customer/home/VehicleCard";
+import ReservationCard from "@/components/customer/home/ReservationCard";
 import PageSkeleton from "@/components/skeletons/PageSkeleton";
 
 const HomePage = () => {

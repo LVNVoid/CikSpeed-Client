@@ -48,8 +48,8 @@ import {
   getStatusBadgeVariant,
   getTranslatedStatus,
 } from "@/lib/utils";
-import ReservationDetailModal from "@/components/admin/modals/ReservationDetailModal";
-import EditReservationModal from "@/components/admin/modals/EditReservationModal";
+import EditReservationModal from "@/components/admin/reservations/EditReservationModal";
+import DetailReservationModal from "@/components/admin/reservations/DetailReservationModal";
 
 const AdminReservationPage = () => {
   const [reservations, setReservations] = useState([]);
@@ -250,10 +250,8 @@ const AdminReservationPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
+          <Alert variant="purple">
+            <AlertTitle>{error}</AlertTitle>
           </Alert>
         </motion.div>
       )}
@@ -403,7 +401,7 @@ const AdminReservationPage = () => {
       </Card>
 
       {/* Reservation Detail Modal */}
-      <ReservationDetailModal
+      <DetailReservationModal
         isOpen={detailModal.isOpen}
         onClose={closeDetailModal}
         reservationId={detailModal.reservationId}

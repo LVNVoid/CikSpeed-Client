@@ -1,6 +1,13 @@
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Home, Users, BookText, History } from "lucide-react";
+import {
+  Home,
+  Users,
+  BookText,
+  History,
+  TicketPlus,
+  BookUser,
+} from "lucide-react";
 
 const SidebarAdmin = ({ isOpen, mobile = false }) => {
   const sidebarVariants = {
@@ -36,12 +43,22 @@ const SidebarAdmin = ({ isOpen, mobile = false }) => {
       path: "/admin/reservations",
     },
     {
+      icon: <TicketPlus className="mr-2 h-4 w-4" />,
+      text: "Symptoms",
+      path: "/admin/symptoms",
+    },
+    {
+      icon: <Users className="mr-2 h-4 w-4" />,
+      text: "Mechanics",
+      path: "/admin/mechanics",
+    },
+    {
       icon: <History className="mr-2 h-4 w-4" />,
       text: "History",
       path: "/admin/history",
     },
     {
-      icon: <Users className="mr-2 h-4 w-4" />,
+      icon: <BookUser className="mr-2 h-4 w-4" />,
       text: "Users",
       path: "/admin/users",
     },

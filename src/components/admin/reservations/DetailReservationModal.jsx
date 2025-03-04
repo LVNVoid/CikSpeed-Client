@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import {
-  X,
   Calendar,
   Clock,
-  User,
-  Phone,
   AlertTriangle,
   Info,
   Car,
@@ -15,7 +12,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,7 +25,7 @@ import {
   getTranslatedStatus,
 } from "@/lib/utils";
 
-const ReservationDetailModal = ({ isOpen, onClose, reservationId }) => {
+const DetailReservationModal = ({ isOpen, onClose, reservationId }) => {
   const [reservation, setReservation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -329,4 +325,4 @@ const ReservationDetailModal = ({ isOpen, onClose, reservationId }) => {
   );
 };
 
-export default ReservationDetailModal;
+export default DetailReservationModal;

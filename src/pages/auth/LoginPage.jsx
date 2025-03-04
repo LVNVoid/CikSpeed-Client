@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
-import { useAuth } from "@/contexts/AuthContext"; // Pastikan path ini benar
+import { useAuth } from "@/contexts/AuthContext";
 
-// Import komponen shadcn/ui
 import {
   Card,
   CardContent,
@@ -23,13 +22,31 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isPhoneValid, setIsPhoneValid] = useState(true);
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  useEffect(() => {
+    if (phone) {
+      const regex = /^8[1-9][0-9]{7,9}$/;
+      setIsPhoneValid(regex.test(phone));
+    } else {
+      setIsPhoneValid(true);
+    }
+  }, [phone]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+
+    if (!isPhoneValid) {
+      setError(
+        "Nomor telepon tidak valid. Masukkan nomor tanpa +62 atau 0. Contoh: 81234567890."
+      );
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await api.post("/auth/login", {
@@ -60,59 +77,92 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="container mx-auto flex items-center justify-center min-h-screen p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10 px-4">
+      <Card className="w-full max-w-md shadow-2xl rounded-2xl border-none">
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl font-bold text-primary">
             Login
           </CardTitle>
-          <CardDescription className="text-center">
+          <CardDescription className="text-muted-foreground">
             Masukkan nomor telepon dan password Anda untuk masuk
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="phone">Nomor Telepon</Label>
-              <Input
-                id="phone"
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="Masukkan nomor telepon"
-                required
-              />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="phone" className="text-muted-foreground">
+                  Nomor Telepon
+                </Label>
+                <div className="flex items-center mt-1">
+                  <div className="flex items-center border rounded-md p-2 bg-muted">
+                    <img
+                      src="https://flagcdn.com/id.svg"
+                      alt="Indonesia"
+                      className="w-5 h-3.5 mr-2"
+                    />
+                    <span className="text-muted-foreground">+62</span>
+                  </div>
+                  <Input
+                    id="phone"
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="81234567890"
+                    className={`ml-2 flex-1 ${
+                      !isPhoneValid && phone ? "border-destructive" : ""
+                    }`}
+                    required
+                  />
+                </div>
+                {!isPhoneValid && phone && (
+                  <p className="text-sm text-destructive mt-1">
+                    Nomor telepon tidak valid. Masukkan **nomor tanpa +62 atau
+                    0**.
+                    <br />
+                    Contoh: <strong>81234567890</strong>.
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="password" className="text-muted-foreground">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Masukkan password"
+                  className="mt-1"
+                  required
+                />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Masukkan password"
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              className="w-full bg-primary hover:bg-primary/90"
+              disabled={loading || !isPhoneValid}
+            >
               {loading ? "Memproses..." : "Login"}
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center">
+        <CardFooter className="flex justify-center border-t pt-5">
           <p className="text-sm text-muted-foreground">
             Belum punya akun?{" "}
-            <button
+            <Button
+              variant="link"
               onClick={() => navigate("/register")}
-              className="text-primary font-medium  hover:text-primary/80"
+              className="text-primary font-medium hover:text-primary/80 p-0"
             >
               Daftar disini
-            </button>
+            </Button>
           </p>
         </CardFooter>
       </Card>

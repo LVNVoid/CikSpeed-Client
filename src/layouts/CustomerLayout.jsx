@@ -1,12 +1,14 @@
-import PublicNavbar from "@/components/PublicNavbar";
 import { Outlet } from "react-router-dom";
+import Navbar from "../components/customer/Navbar";
 
-const PublicLayout = () => {
+const CustomerLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Navbar */}
       <header className="sticky top-0 z-50">
-        <PublicNavbar />
+        <Navbar />
       </header>
+      {/* Konten utama */}
       <main className="flex-1 container mx-auto px-4">
         <Outlet />
       </main>
@@ -14,4 +16,4 @@ const PublicLayout = () => {
   );
 };
 
-export default PublicLayout;
+export default CustomerLayout;

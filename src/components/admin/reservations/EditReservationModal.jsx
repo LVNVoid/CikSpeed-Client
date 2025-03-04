@@ -131,8 +131,9 @@ const EditReservationModal = ({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="pending">Menunggu Konfirmasi</SelectItem>
-                  <SelectItem value="confirmed">Dikonfirmasi</SelectItem>
-                  <SelectItem value="cancelled">Dibatalkan</SelectItem>
+                  <SelectItem value="confirmed">Konfirmasi</SelectItem>
+                  <SelectItem value="cancelled">Batalkan</SelectItem>
+                  <SelectItem value="success">Selesai</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CarIcon, Trash } from "lucide-react";
-import AddVehicleModal from "@/components/modals/AddVehicleModal";
+import AddVehicleModal from "@/components/customer/modals/AddVehicleModal";
 
 const VehicleCard = ({ vehicles, onDeleteVehicle, onVehicleAdded }) => {
   return (
