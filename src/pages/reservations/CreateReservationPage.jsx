@@ -162,7 +162,7 @@ const CreateReservation = () => {
         time: isOtherSymptom ? null : time,
         symptomIds: isOtherSymptom ? [] : symptomIds,
         description,
-        vehicleId: selectedVehicleId, // Send selected vehicle ID
+        vehicleId: selectedVehicleId,
         otherSymptomDescription: isOtherSymptom ? description : null,
       });
       navigate("/reservations");
@@ -255,8 +255,8 @@ const CreateReservation = () => {
                 </Select>
 
                 {userVehicles.length === 0 && (
-                  <div className="mt-2 p-3 bg-warning/10 border border-warning/30 rounded-md">
-                    <p className="text-sm text-warning flex items-center">
+                  <div className="mt-2 p-3 bg-warning/10 border border-warning/30 rounded-md flex flex-col items-center">
+                    <p className="text-sm text-white flex items-center">
                       <AlertCircleIcon className="w-4 h-4 mr-1" />
                       Anda belum menambahkan kendaraan. Silakan tambahkan
                       kendaraan terlebih dahulu.
@@ -287,20 +287,6 @@ const CreateReservation = () => {
                         <span className="text-muted-foreground">Tahun:</span>
                         <p className="font-medium">
                           {selectedVehicle.productionYear}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">
-                          Plat Nomor:
-                        </span>
-                        <p className="font-medium">
-                          {selectedVehicle.licensePlate}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Warna:</span>
-                        <p className="font-medium">
-                          {selectedVehicle.color || "-"}
                         </p>
                       </div>
                     </div>

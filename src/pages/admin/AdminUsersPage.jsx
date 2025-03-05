@@ -155,7 +155,7 @@ const UsersPage = () => {
                       {user.name}
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
-                      {user.phone}
+                      +62{user.phone}
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
                       {user.address}

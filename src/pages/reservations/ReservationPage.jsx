@@ -23,11 +23,9 @@ const ReservationPage = () => {
           setReservation(null);
         }
       } catch (err) {
-        // Hanya tangani error yang bukan 404
         if (err.response && err.response.status !== 404) {
           setError("Gagal mengambil data reservasi");
         }
-        // Jika 404, tidak perlu melakukan apa-apa
       } finally {
         setLoading(false);
       }

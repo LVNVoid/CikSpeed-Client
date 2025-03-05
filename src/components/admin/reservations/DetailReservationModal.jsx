@@ -6,6 +6,9 @@ import {
   Info,
   Car,
   Wrench,
+  LoaderIcon,
+  Check,
+  CheckCircle2,
 } from "lucide-react";
 import {
   Dialog,
@@ -138,6 +141,11 @@ const DetailReservationModal = ({ isOpen, onClose, reservationId }) => {
                   )}
                   className="mt-1 w-fit"
                 >
+                  {reservation.status === "pending" ? (
+                    <LoaderIcon className="h-4 w-4 mr-1 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="h-4 w-4 mr-1" />
+                  )}
                   {capitalizeFirstLetter(
                     getTranslatedStatus(reservation.status || "pending")
                   )}
