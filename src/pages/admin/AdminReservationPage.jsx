@@ -45,11 +45,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import api from "@/services/api";
 import {
   capitalizeFirstLetter,
+  formatTime,
   getStatusBadgeVariant,
   getTranslatedStatus,
 } from "@/lib/utils";
 import EditReservationModal from "@/components/admin/reservations/EditReservationModal";
 import DetailReservationModal from "@/components/admin/reservations/DetailReservationModal";
+import { format } from "date-fns";
 
 const AdminReservationPage = () => {
   const [reservations, setReservations] = useState([]);
@@ -169,8 +171,6 @@ const AdminReservationPage = () => {
         year: "numeric",
         month: "long",
         day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
       };
       return new Date(dateString).toLocaleDateString("id-ID", options);
     } catch (error) {
@@ -326,6 +326,8 @@ const AdminReservationPage = () => {
                         <div>
                           <p className="font-medium">
                             {formatDate(reservation.date)}
+                            {" | "}
+                            {formatTime(reservation.time)}
                           </p>
                         </div>
                       </TableCell>

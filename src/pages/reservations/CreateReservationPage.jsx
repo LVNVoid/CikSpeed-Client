@@ -256,7 +256,7 @@ const CreateReservation = () => {
 
                 {userVehicles.length === 0 && (
                   <div className="mt-2 p-3 bg-warning/10 border border-warning/30 rounded-md flex flex-col items-center">
-                    <p className="text-sm text-white flex items-center">
+                    <p className="text-sm text-primary flex items-center">
                       <AlertCircleIcon className="w-4 h-4 mr-1" />
                       Anda belum menambahkan kendaraan. Silakan tambahkan
                       kendaraan terlebih dahulu.

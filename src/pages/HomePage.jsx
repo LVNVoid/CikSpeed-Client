@@ -1,89 +1,43 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 
-import api from "@/services/api";
-
-// Components
 import UserInfoCard from "@/components/customer/home/UserInfoCard";
 import VehicleCard from "@/components/customer/home/VehicleCard";
 import ReservationCard from "@/components/customer/home/ReservationCard";
 import PageSkeleton from "@/components/skeletons/PageSkeleton";
 
+import useReservationUser from "@/hooks/useReservationUser";
+import useVehicles from "@/hooks/useVehicles";
+import useUser from "@/hooks/useUser";
+
 const HomePage = () => {
-  const [user, setUser] = useState(null);
-  const [reservation, setReservation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [vehicles, setVehicles] = useState([]);
+  const { user } = useUser();
+  const {
+    vehicles,
+    loading: vehiclesLoading,
+    fetchVehiclesData,
+    handleDeleteVehicle,
+    handleVehicleAdded,
+  } = useVehicles();
+  const {
+    reservation,
+    loading: reservationLoading,
+    fetchReservationData,
+  } = useReservationUser();
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await Promise.all([fetchVehiclesData(), fetchReservationData()]);
+      } catch (error) {
+        toast.error("Gagal memuat data. Silakan coba lagi.");
+      }
+    };
+
     fetchData();
-  }, []);
+  }, [fetchVehiclesData, fetchReservationData]);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      await Promise.all([
-        fetchUserData(),
-        fetchVehiclesData(),
-        fetchReservationData(),
-      ]);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      toast.error("Gagal memuat data. Silakan coba lagi.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchUserData = async () => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-    }
-  };
-
-  const fetchVehiclesData = async () => {
-    try {
-      const response = await api.get("/vehicles/user");
-      setVehicles(response.data);
-    } catch (error) {
-      console.error("Error fetching vehicle data:", error);
-      setVehicles([]);
-    }
-  };
-
-  const fetchReservationData = async () => {
-    try {
-      const response = await api.get("/reservations/my-reservations");
-      setReservation(response.data.data);
-    } catch (error) {
-      console.error("Error fetching reservation data:", error);
-      setReservation(null);
-    }
-  };
-
-  const handleDeleteVehicle = async (vehicleId) => {
-    if (!window.confirm("Apakah Anda yakin ingin menghapus kendaraan ini?")) {
-      return;
-    }
-
-    try {
-      await api.delete(`/vehicles/${vehicleId}`);
-      setVehicles(vehicles.filter((vehicle) => vehicle.id !== vehicleId));
-      toast.success("Kendaraan berhasil dihapus");
-    } catch (error) {
-      console.error("Gagal menghapus kendaraan:", error);
-      toast.error("Gagal menghapus kendaraan. Silakan coba lagi.");
-    }
-  };
-
-  const handleVehicleAdded = (newVehicle) => {
-    setVehicles([...vehicles, newVehicle]);
-    toast.success("Kendaraan berhasil ditambahkan");
-  };
-
-  if (loading) {
+  if (vehiclesLoading || reservationLoading) {
     return <PageSkeleton />;
   }
 
@@ -107,13 +61,6 @@ const HomePage = () => {
         />
         <ReservationCard reservation={reservation} />
       </div>
-      {/* <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ServicesCard />
-        <PromoCard />
-      </div>
-      <div className="mt-8">
-        <StatsCard />
-      </div> */}
     </div>
   );
 };
