@@ -6,6 +6,7 @@ import api from "@/services/api";
 import { Badge } from "@/components/ui/badge";
 import { CircleCheck, CircleX, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatTime } from "@/lib/utils";
 
 const ReservationPage = () => {
   const [reservation, setReservation] = useState(null);
@@ -82,10 +83,19 @@ const ReservationPage = () => {
                   })}
                 </p>
 
+                <p className="font-medium text-muted-foreground">Mekanik</p>
+                <p>
+                  {reservation.Mechanic?.name || (
+                    <span className="text-muted-foreground italic font-light">
+                      Belum ditentukan
+                    </span>
+                  )}
+                </p>
+
                 {reservation.time && (
                   <>
                     <p className="font-medium text-muted-foreground">Waktu</p>
-                    <p>{reservation.time}</p>
+                    <p>{formatTime(reservation.time)}</p>
                     <p className="font-medium text-muted-foreground">
                       Jenis Servis
                     </p>
@@ -100,30 +110,45 @@ const ReservationPage = () => {
                 )}
 
                 <p className="font-medium text-muted-foreground">Status</p>
-                <span>
-                  <Badge
-                    variant={
-                      reservation.status === "pending"
-                        ? "warning"
+                <div className="flex flex-col">
+                  <span>
+                    <Badge
+                      variant={
+                        reservation.status === "pending"
+                          ? "warning"
+                          : reservation.status === "confirmed"
+                          ? "success"
+                          : "danger"
+                      }
+                    >
+                      {reservation.status === "pending" ? (
+                        <Loader className="mr-2 h-4 w-4 animate-spin" />
+                      ) : reservation.status === "confirmed" ? (
+                        <CircleCheck className="mr-2 h-4 w-4" />
+                      ) : (
+                        <CircleX className="mr-2 h-4 w-4" />
+                      )}{" "}
+                      {reservation.status === "pending"
+                        ? "Menunggu Konfirmasi"
                         : reservation.status === "confirmed"
-                        ? "success"
-                        : "danger"
-                    }
-                  >
+                        ? "Dikonfirmasi"
+                        : "Dibatalkan"}
+                    </Badge>
+                  </span>
+                  <span>
                     {reservation.status === "pending" ? (
-                      <Loader className="mr-2 h-4 w-4 animate-spin" />
-                    ) : reservation.status === "confirmed" ? (
-                      <CircleCheck className="mr-2 h-4 w-4" />
+                      <span className="text-muted-foreground text-sm mt-1 italic">
+                        *Menunggu konfirmasi dari mekanik
+                      </span>
                     ) : (
-                      <CircleX className="mr-2 h-4 w-4" />
-                    )}{" "}
-                    {reservation.status === "pending"
-                      ? "Menunggu Konfirmasi"
-                      : reservation.status === "confirmed"
-                      ? "Dikonfirmasi"
-                      : "Dibatalkan"}
-                  </Badge>
-                </span>
+                      reservation.status === "confirmed" && (
+                        <span className="text-muted-foreground text-sm mt-1 italic">
+                          *Reservasi telah dikonfirmasi mohon datang tepat waktu
+                        </span>
+                      )
+                    )}
+                  </span>
+                </div>
 
                 {reservation.Symptoms && reservation.Symptoms.length > 0 && (
                   <>

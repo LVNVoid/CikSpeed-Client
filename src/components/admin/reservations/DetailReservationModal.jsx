@@ -24,6 +24,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import api from "@/services/api";
 import {
   capitalizeFirstLetter,
+  formatTime,
   getStatusBadgeVariant,
   getTranslatedStatus,
 } from "@/lib/utils";
@@ -72,11 +73,6 @@ const DetailReservationModal = ({ isOpen, onClose, reservationId }) => {
     } catch (error) {
       return "Format tanggal tidak valid";
     }
-  };
-
-  const formatTime = (timeString) => {
-    if (!timeString) return "Tidak tersedia";
-    return timeString.substring(0, 5);
   };
 
   const getServiceTypeBadge = (serviceType) => {
@@ -188,7 +184,7 @@ const DetailReservationModal = ({ isOpen, onClose, reservationId }) => {
                   <div>
                     <p className="text-sm text-muted-foreground">Waktu</p>
                     <p className="font-medium">
-                      {formatTime(reservation.time)} WIB
+                      {formatTime(reservation.time)}
                     </p>
                   </div>
                 </CardContent>
@@ -314,14 +310,6 @@ const DetailReservationModal = ({ isOpen, onClose, reservationId }) => {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Footer Buttons */}
-            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
-              <Button variant="outline" onClick={onClose}>
-                Tutup
-              </Button>
-              <Button>Ubah Status</Button>
-            </div>
           </div>
         ) : (
           <div className="py-6 px-4 text-center">

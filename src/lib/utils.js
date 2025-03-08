@@ -18,6 +18,7 @@ export const formatDate = (dateString) => {
 };
 
 export const formatTime = (timeString) => {
+  if (!timeString) return "-";
   return timeString.substring(0, 5);
 };
 

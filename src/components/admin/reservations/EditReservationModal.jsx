@@ -20,7 +20,7 @@ import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import api from "@/services/api";
 import { toast } from "sonner";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Popover,
@@ -326,7 +326,17 @@ const EditReservationModal = ({
               disabled={loading}
               className="w-full sm:w-auto"
             >
-              {loading ? "Menyimpan..." : "Simpan Perubahan"}
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Menyimpan...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  Simpan
+                </>
+              )}
             </Button>
           </DialogFooter>
         </form>

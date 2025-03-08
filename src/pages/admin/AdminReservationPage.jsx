@@ -267,9 +267,8 @@ const AdminReservationPage = () => {
               <TableHeader className="bg-background">
                 <TableRow>
                   <TableHead className="font-semibold">Pelanggan</TableHead>
-                  <TableHead className="font-semibold">
-                    Tanggal & Waktu
-                  </TableHead>
+                  <TableHead className="font-semibold">Tanggal</TableHead>
+                  <TableHead className="font-semibold">Waktu</TableHead>
                   <TableHead className="font-semibold">Jenis Servis</TableHead>
                   <TableHead className="font-semibold">Status</TableHead>
                   <TableHead className="text-right font-semibold">
@@ -326,7 +325,12 @@ const AdminReservationPage = () => {
                         <div>
                           <p className="font-medium">
                             {formatDate(reservation.date)}
-                            {" | "}
+                          </p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">
                             {formatTime(reservation.time)}
                           </p>
                         </div>
