@@ -18,6 +18,22 @@ import {
   CircleX,
 } from "lucide-react";
 
+const getServiceTypeBadge = (type) => {
+  if (type === "major") {
+    return (
+      <Badge variant="info" className={"rounded-full"}>
+        Servis Besar
+      </Badge>
+    );
+  } else {
+    return (
+      <Badge variant="purple" className={"rounded-full"}>
+        Servis Ringan
+      </Badge>
+    );
+  }
+};
+
 const ReservationCard = ({ reservation }) => {
   return (
     <Card className="md:col-span-1 bg-background">
@@ -31,9 +47,7 @@ const ReservationCard = ({ reservation }) => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="font-semibold">
-                {reservation.serviceType === "major"
-                  ? "Servis Besar"
-                  : "Servis Ringan"}
+                {getServiceTypeBadge(reservation.serviceType)}
               </h3>
               <Badge
                 variant={

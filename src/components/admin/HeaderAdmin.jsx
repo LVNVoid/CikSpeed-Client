@@ -1,4 +1,4 @@
-import { Bell, User, Settings, LogOut, Menu } from "lucide-react";
+import { User, Settings, LogOut, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,10 +9,12 @@ import {
 import { ModeToggle } from "../mode-toggle";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import NotificationDropdown from "./NotificationDropdown";
 
 const HeaderAdmin = ({ toggleSidebar }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+
   const handleLogout = async () => {
     try {
       await logout(); // Gunakan fungsi logout dari useAuth
@@ -39,11 +41,7 @@ const HeaderAdmin = ({ toggleSidebar }) => {
       </div>
 
       <div className="flex items-center space-x-2">
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-primary"></span>
-        </Button>
-
+        <NotificationDropdown />
         <ModeToggle />
 
         <DropdownMenu>

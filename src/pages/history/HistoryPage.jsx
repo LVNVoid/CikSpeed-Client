@@ -70,9 +70,17 @@ const HistoryReservationPage = () => {
 
   const getServiceTypeBadge = (type) => {
     if (type === "major") {
-      return <Badge>Servis Besar</Badge>;
+      return (
+        <Badge variant="info" className={"rounded-full"}>
+          Servis Besar
+        </Badge>
+      );
     } else {
-      return <Badge>Servis Ringan</Badge>;
+      return (
+        <Badge variant="purple" className={"rounded-full"}>
+          Servis Ringan
+        </Badge>
+      );
     }
   };
 

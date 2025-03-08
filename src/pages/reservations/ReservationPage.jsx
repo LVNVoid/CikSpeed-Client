@@ -8,6 +8,22 @@ import { CircleCheck, CircleX, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatTime } from "@/lib/utils";
 
+const getServiceTypeBadge = (type) => {
+  if (type === "major") {
+    return (
+      <Badge variant="info" className={"rounded-full"}>
+        Servis Besar
+      </Badge>
+    );
+  } else {
+    return (
+      <Badge variant="purple" className={"rounded-full"}>
+        Servis Ringan
+      </Badge>
+    );
+  }
+};
+
 const ReservationPage = () => {
   const [reservation, setReservation] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -99,13 +115,7 @@ const ReservationPage = () => {
                     <p className="font-medium text-muted-foreground">
                       Jenis Servis
                     </p>
-                    <p>
-                      {reservation.serviceType === "regular"
-                        ? "Servis Ringan"
-                        : reservation.serviceType === "major"
-                        ? "Servis Besar"
-                        : reservation.serviceType}
-                    </p>
+                    <span>{getServiceTypeBadge(reservation.type)}</span>
                   </>
                 )}
 

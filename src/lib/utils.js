@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
