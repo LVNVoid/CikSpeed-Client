@@ -8,6 +8,7 @@ import AddMechanicModal from "@/components/admin/mechanics/AddMechanicModal";
 import EditMechanicModal from "@/components/admin/mechanics/EditMechanicModal";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, PlusCircle, RefreshCcw } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const AdminMechanicPage = () => {
   const { mechanics, loading, error, fetchMechanics, setMechanics } =
@@ -15,6 +16,10 @@ const AdminMechanicPage = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentMechanic, setCurrentMechanic] = useState(null);
+
+  const { user } = useAuth();
+
+  const isAdmin = user?.role === "admin";
 
   const handleAddMechanic = async (newMechanic) => {
     try {
@@ -86,10 +91,12 @@ const AdminMechanicPage = () => {
             <RefreshCcw className="w-4 h-4 mr-2" />
             Refresh Data
           </Button>
-          <Button size="sm" onClick={() => setAddModalOpen(true)}>
-            <PlusCircle className="w-4 h-4 mr-2" />
-            Tambah Mekanik
-          </Button>
+          {isAdmin && (
+            <Button size="sm" onClick={() => setAddModalOpen(true)}>
+              <PlusCircle className="w-4 h-4 mr-2" />
+              Tambah Mekanik
+            </Button>
+          )}
         </div>
       </div>
 
@@ -129,6 +136,7 @@ const AdminMechanicPage = () => {
                 setEditModalOpen(true);
               }}
               onDelete={handleDeleteMechanic}
+              isAdmin={isAdmin}
             />
           ))
         )}

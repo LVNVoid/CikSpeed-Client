@@ -25,12 +25,17 @@ import {
   formatDate,
   getRoleBadgeVariant,
 } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
 
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("all");
+
+  const { user } = useAuth();
+
+  const isAdmin = user?.role === "admin";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -177,10 +182,14 @@ const UsersPage = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuItem>Lihat Detail</DropdownMenuItem>
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
-                            Hapus
-                          </DropdownMenuItem>
+                          {isAdmin && (
+                            <>
+                              <DropdownMenuItem>Edit</DropdownMenuItem>
+                              <DropdownMenuItem className="text-red-600">
+                                Hapus
+                              </DropdownMenuItem>
+                            </>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

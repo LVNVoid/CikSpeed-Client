@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/dialog";
 
 import api from "@/services/api";
+import { useAuth } from "@/contexts/AuthContext";
 
 const AdminSymptomPage = () => {
   const [symptoms, setSymptoms] = useState([]);
@@ -66,6 +67,9 @@ const AdminSymptomPage = () => {
   // New symptom form state
   const [newSymptomName, setNewSymptomName] = useState("");
   const [newSymptomServiceType, setNewSymptomServiceType] = useState("regular");
+
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
 
   const fetchSymptoms = async () => {
     setLoading(true);
@@ -223,10 +227,12 @@ const AdminSymptomPage = () => {
             <RefreshCcw className="w-4 h-4 mr-2" />
             Refresh Data
           </Button>
-          <Button size="sm" onClick={() => setAddModalOpen(true)}>
-            <PlusCircle className="w-4 h-4 mr-2" />
-            Tambah Gejala
-          </Button>
+          {isAdmin && (
+            <Button size="sm" onClick={() => setAddModalOpen(true)}>
+              <PlusCircle className="w-4 h-4 mr-2" />
+              Tambah Gejala
+            </Button>
+          )}
         </div>
       </div>
 
@@ -297,7 +303,9 @@ const AdminSymptomPage = () => {
                   <TableHead>Nama Gejala</TableHead>
                   <TableHead>Jenis Servis</TableHead>
                   <TableHead>Dibuat pada</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
+                  {isAdmin && (
+                    <TableHead className="text-right">Aksi</TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -332,51 +340,53 @@ const AdminSymptomPage = () => {
                       <TableCell>
                         <p>{formatDate(symptom.createdAt)}</p>
                       </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0"
-                            >
-                              <span className="sr-only">Buka menu</span>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="h-4 w-4"
+                      {isAdmin && (
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0"
                               >
-                                <circle cx="12" cy="12" r="1" />
-                                <circle cx="12" cy="5" r="1" />
-                                <circle cx="12" cy="19" r="1" />
-                              </svg>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => {
-                                setCurrentSymptom(symptom);
-                                setEditModalOpen(true);
-                              }}
-                            >
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="text-red-600"
-                              onClick={() => handleDeleteSymptom(symptom.id)}
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Hapus
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+                                <span className="sr-only">Buka menu</span>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="h-4 w-4"
+                                >
+                                  <circle cx="12" cy="12" r="1" />
+                                  <circle cx="12" cy="5" r="1" />
+                                  <circle cx="12" cy="19" r="1" />
+                                </svg>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setCurrentSymptom(symptom);
+                                  setEditModalOpen(true);
+                                }}
+                              >
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="text-red-600"
+                                onClick={() => handleDeleteSymptom(symptom.id)}
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Hapus
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 )}
