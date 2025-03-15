@@ -148,7 +148,7 @@ const ReservationPage = () => {
                   <span>
                     {reservation.status === "pending" ? (
                       <span className="text-muted-foreground text-sm mt-1 italic">
-                        *Menunggu konfirmasi dari mekanik
+                        * Menunggu konfirmasi
                       </span>
                     ) : (
                       reservation.status === "confirmed" && (

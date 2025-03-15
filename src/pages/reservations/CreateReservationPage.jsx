@@ -67,7 +67,7 @@ const CreateReservation = () => {
           api.get("/vehicles/user"),
         ]);
 
-        setSymptoms(symptomsResponse.data);
+        setSymptoms(symptomsResponse.data.data);
         setUserVehicles(vehiclesResponse.data);
 
         // Set default selected vehicle if user has vehicles
