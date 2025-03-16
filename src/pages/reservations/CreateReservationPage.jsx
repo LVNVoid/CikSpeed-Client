@@ -238,7 +238,10 @@ const CreateReservation = () => {
                       <SelectGroup>
                         <SelectLabel>Kendaraan Tersedia</SelectLabel>
                         {userVehicles.map((vehicle) => (
-                          <SelectItem key={vehicle.id} value={vehicle.id}>
+                          <SelectItem
+                            key={vehicle.id}
+                            value={`${vehicle.id} ${vehicle.type} ${vehicle.productionYear}`}
+                          >
                             {vehicle.brand} {vehicle.type} (
                             {vehicle.productionYear})
                           </SelectItem>

@@ -102,7 +102,7 @@ const RegisterPage = () => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Contoh: Budi Santoso"
+                placeholder="Masukkan nama lengkap"
                 required
                 className="mt-1"
               />
