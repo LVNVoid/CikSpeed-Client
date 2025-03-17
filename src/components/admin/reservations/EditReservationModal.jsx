@@ -168,7 +168,7 @@ const EditReservationModal = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg w-full p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
         <DialogHeader className="mb-4">
-          <DialogTitle className="text-xl">Edit Reservasi</DialogTitle>
+          <DialogTitle className="text-xl">Konfirmasi Reservasi</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
@@ -303,7 +303,7 @@ const EditReservationModal = ({
                 </SelectTrigger>
                 <SelectContent>
                   {mechanics.map((mechanic) => (
-                    <SelectItem key={mechanic.id} value={mechanic.id}>
+                    <SelectItem key={mechanic.id} value={mechanic.name}>
                       {mechanic.name}
                     </SelectItem>
                   ))}

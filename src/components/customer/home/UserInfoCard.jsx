@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserIcon, PhoneIcon, MapPinIcon } from "lucide-react";
 
@@ -16,7 +17,7 @@ const UserInfoCard = ({ user }) => {
             <UserIcon size={16} className="mt-1 text-muted-foreground " />
             <div>
               <p className="text-sm text-muted-foreground ">Nama</p>
-              <p className="font-medium">{user?.name || "Tidak tersedia"}</p>
+              <p className="font-medium">{user?.name}</p>
             </div>
           </div>
 
@@ -24,7 +25,7 @@ const UserInfoCard = ({ user }) => {
             <PhoneIcon size={16} className="mt-1 text-muted-foreground " />
             <div>
               <p className="text-sm text-muted-foreground ">Nomor Telepon</p>
-              <p className="font-medium">{user?.phone || "Tidak tersedia"}</p>
+              <p className="font-medium">{`+62${user?.phone}`}</p>
             </div>
           </div>
 
@@ -32,19 +33,9 @@ const UserInfoCard = ({ user }) => {
             <MapPinIcon size={16} className="mt-1 text-muted-foreground " />
             <div>
               <p className="text-sm text-muted-foreground ">Alamat</p>
-              <p className="font-medium">{user?.address || "Tidak tersedia"}</p>
+              <p className="font-medium">{user?.address}</p>
             </div>
           </div>
-
-          {user?.role && (
-            <div className="flex items-start gap-2">
-              <UserIcon size={16} className="mt-1 text-muted-foreground " />
-              <div>
-                <p className="text-sm text-muted-foreground ">Role</p>
-                <p className="font-medium capitalize">{user.role}</p>
-              </div>
-            </div>
-          )}
         </div>
       </CardContent>
     </Card>

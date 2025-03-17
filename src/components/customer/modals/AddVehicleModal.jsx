@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import api from "@/services/api";
+import { PlusCircleIcon } from "lucide-react";
 
 const AddVehicleModal = ({ onVehicleAdded }) => {
   const [open, setOpen] = useState(false);
@@ -47,7 +48,10 @@ const AddVehicleModal = ({ onVehicleAdded }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Tambah Kendaraan</Button>
+        <Button variant="outline">
+          <PlusCircleIcon className="mr-2 h-4 w-4" />
+          Tambah Kendaraan
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

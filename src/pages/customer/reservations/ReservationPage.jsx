@@ -1,12 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import api from "@/services/api";
 import { Badge } from "@/components/ui/badge";
 import { CircleCheck, CircleX, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatTime } from "@/lib/utils";
+import useReservationUser from "@/hooks/useReservationUser"; // Sesuaikan path jika diperlukan
 
 const getServiceTypeBadge = (type) => {
   if (type === "major") {
@@ -25,44 +31,20 @@ const getServiceTypeBadge = (type) => {
 };
 
 const ReservationPage = () => {
-  const [reservation, setReservation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const {
+    reservation,
+    loading,
+    fetchReservationData,
+    handleCancelReservation,
+  } = useReservationUser();
 
   useEffect(() => {
-    const fetchReservation = async () => {
-      try {
-        const response = await api.get("/reservations/my-reservations");
-        if (response.data) {
-          setReservation(response.data.data);
-        } else {
-          setReservation(null);
-        }
-      } catch (err) {
-        if (err.response && err.response.status !== 404) {
-          setError("Gagal mengambil data reservasi");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchReservation();
-  }, []);
+    fetchReservationData();
+  }, [fetchReservationData]);
 
   if (loading) {
     return <Skeleton className="w-full h-40" />;
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-center space-y-4">
-        <p className="text-red-600 text-lg">{error}</p>
-        <Button onClick={() => navigate("/reservations/create")}>
-          Coba Lagi &raquo;
-        </Button>
-      </div>
-    );
   }
 
   if (!reservation) {
@@ -214,7 +196,7 @@ const ReservationPage = () => {
                   <p className="font-medium text-muted-foreground">Nama</p>
                   <p>{reservation.User.name}</p>
                   <p className="font-medium text-muted-foreground">Telepon</p>
-                  <p>{reservation.User.phone}</p>
+                  <p>{`+62${reservation.User.phone}`}</p>
                   <p className="font-medium text-muted-foreground">Alamat</p>
                   <p>{reservation.User.address}</p>
                 </div>
@@ -226,6 +208,14 @@ const ReservationPage = () => {
             </div>
           </div>
         </CardContent>
+        <CardFooter className="flex justify-end">
+          <Button
+            variant="destructive"
+            onClick={() => handleCancelReservation(reservation.id)}
+          >
+            Batalkan
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );

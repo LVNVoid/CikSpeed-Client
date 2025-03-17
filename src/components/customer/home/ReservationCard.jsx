@@ -17,6 +17,7 @@ import {
   CircleCheck,
   CircleX,
 } from "lucide-react";
+import { formatTime } from "@/lib/utils";
 
 const getServiceTypeBadge = (type) => {
   if (type === "major") {
@@ -34,7 +35,7 @@ const getServiceTypeBadge = (type) => {
   }
 };
 
-const ReservationCard = ({ reservation }) => {
+const ReservationCard = ({ reservation, onCancelReservation }) => {
   return (
     <Card className="md:col-span-1 bg-background">
       <CardHeader>
@@ -94,7 +95,7 @@ const ReservationCard = ({ reservation }) => {
                   size={16}
                   className="text-gray-500 dark:text-gray-400"
                 />
-                <span>{reservation.time}</span>
+                <span>{formatTime(reservation.time)}</span>
               </div>
             )}
 
@@ -133,19 +134,21 @@ const ReservationCard = ({ reservation }) => {
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Anda belum melakukan reservasi
             </p>
-            <Button className="w-full">
-              <Link to="/reservations/create">Reservasi Sekarang</Link>
+            <Button variant="outline" className="w-full">
+              <Link to="/reservations/create">Reservasi Sekarang &raquo; </Link>
             </Button>
           </div>
         )}
       </CardContent>
       {reservation && (
-        <CardFooter className="flex justify-between">
-          <Button variant="outline">
-            <Link to={`/reservations`}>Lihat Detail</Link>
-          </Button>
+        <CardFooter className="flex justify-end">
           {reservation.status === "pending" && (
-            <Button variant="destructive">Batalkan</Button>
+            <Button
+              variant="destructive"
+              onClick={() => onCancelReservation(reservation.id)}
+            >
+              Batalkan
+            </Button>
           )}
         </CardFooter>
       )}
@@ -172,6 +175,7 @@ ReservationCard.propTypes = {
       })
     ),
   }),
+  onCancelReservation: PropTypes.func.isRequired,
 };
 
 export default ReservationCard;

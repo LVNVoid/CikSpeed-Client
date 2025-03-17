@@ -1,12 +1,12 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
 import CustomerLayout from "./layouts/CustomerLayout";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/customer/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
-import CreateReservationPage from "./pages/reservations/CreateReservationPage";
-import ReservationsPage from "./pages/reservations/ReservationPage";
-import HistoryPage from "./pages/history/HistoryPage";
+import CreateReservationPage from "./pages/customer/reservations/CreateReservationPage";
+import ReservationsPage from "./pages/customer/reservations/ReservationPage";
+import HistoryPage from "./pages/customer/history/HistoryPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 import UnauthorizedPage from "./pages/errors/UnauthorizedPage";

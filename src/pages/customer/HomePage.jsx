@@ -23,6 +23,7 @@ const HomePage = () => {
     reservation,
     loading: reservationLoading,
     fetchReservationData,
+    handleCancelReservation,
   } = useReservationUser();
 
   useEffect(() => {
@@ -59,7 +60,10 @@ const HomePage = () => {
           onDeleteVehicle={handleDeleteVehicle}
           onVehicleAdded={handleVehicleAdded}
         />
-        <ReservationCard reservation={reservation} />
+        <ReservationCard
+          reservation={reservation}
+          onCancelReservation={handleCancelReservation}
+        />
       </div>
     </div>
   );
