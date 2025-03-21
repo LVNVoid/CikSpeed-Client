@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -43,31 +44,55 @@ const EditReservationModal = ({
   const [loading, setLoading] = useState(false);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [calendarOpen, setCalendarOpen] = useState(false);
+  const [reservationExists, setReservationExists] = useState(true);
 
   // Format date for API requests
   const formattedDate = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
 
-  // Fetch reservation details and mechanics
+  // First check that the reservation exists
   useEffect(() => {
     if (reservationId) {
+      api
+        .get(`/reservations/${reservationId}`)
+        .then(() => setReservationExists(true))
+        .catch((error) => {
+          if (error.response?.status === 404) {
+            toast.error("Reservasi tidak ditemukan");
+            setReservationExists(false);
+            onClose(); // Close modal if reservation doesn't exist
+          }
+        });
+    }
+  }, [reservationId, onClose]);
+
+  // Fetch reservation details and mechanics
+  useEffect(() => {
+    if (reservationId && reservationExists) {
       const fetchData = async () => {
         setLoading(true);
         try {
-          const [reservationResponse, mechanicsResponse] = await Promise.all([
-            api.get(`/reservations/${reservationId}`),
-            api.get("/mechanics"),
-          ]);
+          // Fetch mechanics first
+          const mechanicsResponse = await api.get("/mechanics");
+          setMechanics(mechanicsResponse.data);
 
+          // Then fetch reservation
+          const reservationResponse = await api.get(
+            `/reservations/${reservationId}`
+          );
           const reservation = reservationResponse.data;
+
           setSelectedDate(new Date(reservation.date));
           setTime(reservation.time);
           setStatus(reservation.status);
           setServiceType(reservation.serviceType);
-          setMechanicId(reservation.mechanicId);
-          setMechanics(mechanicsResponse.data);
+
+          // Convert mechanicId to string to match Select component expectations
+          const mechId = reservation.mechanicId
+            ? reservation.mechanicId.toString()
+            : "";
+          setMechanicId(mechId);
         } catch (error) {
           toast.error("Gagal memuat data reservasi");
-          console.error(error);
         } finally {
           setLoading(false);
         }
@@ -75,16 +100,20 @@ const EditReservationModal = ({
 
       fetchData();
     }
-  }, [reservationId]);
+  }, [reservationId, reservationExists]);
 
   // Fetch available time slots when date or service type changes
   const fetchAvailableSlots = async (selectedDate) => {
-    if (!selectedDate) return;
+    if (!selectedDate || !serviceType) return;
 
     setLoading(true);
     try {
       const response = await api.get("/reservations/available-slots", {
-        params: { date: selectedDate, serviceType },
+        params: {
+          date: selectedDate,
+          serviceType,
+          reservationId, // Include current reservation ID to exclude it from availability check
+        },
       });
       setAvailableSlots(response.data);
     } catch (error) {
@@ -99,7 +128,7 @@ const EditReservationModal = ({
 
   // Fetch available slots when date or service type changes
   useEffect(() => {
-    if (formattedDate) {
+    if (formattedDate && serviceType) {
       fetchAvailableSlots(formattedDate);
     }
   }, [serviceType, formattedDate]);
@@ -118,6 +147,20 @@ const EditReservationModal = ({
       return;
     }
 
+    if (!mechanicId) {
+      toast.error("Silakan pilih mekanik");
+      return;
+    }
+
+    // Check if mechanic exists in the current mechanics list
+    const mechanicExists = mechanics.some(
+      (m) => m.id.toString() === mechanicId.toString()
+    );
+    if (!mechanicExists) {
+      toast.error("Mekanik tidak ditemukan");
+      return;
+    }
+
     if (serviceType === "major") {
       const allowedHours = ["13:00", "15:00"];
       if (!allowedHours.includes(time)) {
@@ -128,20 +171,37 @@ const EditReservationModal = ({
 
     setLoading(true);
 
+    const requestData = {
+      date: formattedDate,
+      time,
+      status,
+      serviceType,
+      mechanicId: mechanicId.toString(), // Ensure it's a string
+    };
+
     try {
-      await api.put(`/reservations/${reservationId}`, {
-        date: formattedDate,
-        time,
-        status,
-        serviceType,
-        mechanicId,
-      });
+      // Double-check reservation exists before updating
+      await api.get(`/reservations/${reservationId}`);
+
+      await api.put(`/reservations/${reservationId}`, requestData);
 
       toast.success("Reservasi berhasil diperbarui");
       onSuccess(); // Refresh data setelah berhasil
       onClose(); // Tutup modal
     } catch (error) {
-      toast.error("Gagal memperbarui reservasi");
+      if (error.response?.status === 404) {
+        toast.error("Reservasi tidak ditemukan");
+        onClose(); // Close modal if reservation doesn't exist
+      } else if (error.response?.data?.error === "Mekanik tidak ditemukan") {
+        toast.error(
+          "Mekanik tidak ditemukan. Silakan pilih mekanik yang tersedia."
+        );
+      } else {
+        toast.error(
+          "Gagal memperbarui reservasi: " +
+            (error.response?.data?.message || error.message)
+        );
+      }
       console.error(error);
     } finally {
       setLoading(false);
@@ -163,6 +223,11 @@ const EditReservationModal = ({
 
     return date < today;
   };
+
+  // Don't render if reservation doesn't exist
+  if (!reservationExists) {
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -303,7 +368,10 @@ const EditReservationModal = ({
                 </SelectTrigger>
                 <SelectContent>
                   {mechanics.map((mechanic) => (
-                    <SelectItem key={mechanic.id} value={mechanic.name}>
+                    <SelectItem
+                      key={mechanic.id}
+                      value={mechanic.id.toString()}
+                    >
                       {mechanic.name}
                     </SelectItem>
                   ))}

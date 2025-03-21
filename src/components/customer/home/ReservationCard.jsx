@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
   Card,
@@ -36,6 +36,8 @@ const getServiceTypeBadge = (type) => {
 };
 
 const ReservationCard = ({ reservation, onCancelReservation }) => {
+  const navigate = useNavigate();
+
   return (
     <Card className="md:col-span-1 bg-background">
       <CardHeader>
@@ -140,18 +142,23 @@ const ReservationCard = ({ reservation, onCancelReservation }) => {
           </div>
         )}
       </CardContent>
-      {reservation && (
-        <CardFooter className="flex justify-end">
-          {reservation.status === "pending" && (
-            <Button
-              variant="destructive"
-              onClick={() => onCancelReservation(reservation.id)}
-            >
-              Batalkan
-            </Button>
-          )}
-        </CardFooter>
-      )}
+      <CardFooter className="flex justify-between">
+        <Button
+          variant="outline"
+          onClick={() => navigate("/reservations")} // Tambahkan navigasi
+        >
+          Detail Reservasi &raquo;
+        </Button>
+        {reservation && (
+          <Button
+            variant="destructive"
+            disabled={reservation.status !== "pending"}
+            onClick={() => onCancelReservation(reservation.id)}
+          >
+            Batalkan
+          </Button>
+        )}
+      </CardFooter>
     </Card>
   );
 };
