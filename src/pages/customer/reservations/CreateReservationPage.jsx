@@ -40,6 +40,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import CustomCalendar from "@/components/ui/CustomCalendar";
+import { toast } from "sonner";
 
 const CreateReservation = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -167,10 +168,10 @@ const CreateReservation = () => {
       });
       navigate("/reservations");
     } catch (error) {
-      console.error(
-        error.response?.data?.error || "Failed to create reservation"
-      );
-      alert("Failed to create reservation. Please try again.");
+      toast("Reservasi Gagal!", {
+        description: error.response?.data?.error,
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }

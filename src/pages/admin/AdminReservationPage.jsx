@@ -209,7 +209,7 @@ const AdminReservationPage = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
-                placeholder="Cari berdasarkan nama, telepon, atau jenis servis..."
+                placeholder="Cari berdasarkan nama pelanggan"
                 className="pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -307,8 +307,8 @@ const AdminReservationPage = () => {
                               {reservation.User?.name || "Nama tidak tersedia"}
                             </p>
                             <p className="text-sm text-foreground">
-                              {reservation.User?.phone ||
-                                "No. Telp tidak tersedia"}
+                              +62
+                              {reservation.User?.phone}
                             </p>
                           </div>
                         </div>

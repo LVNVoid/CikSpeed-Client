@@ -160,7 +160,7 @@ const ReservationHistoryPage = () => {
             <div>
               <h4 className="text-sm font-medium">Mekanik</h4>
               <p>{reservation?.Mechanic?.name || "Tidak tersedia"}</p>
-              <p>{reservation?.Mechanic?.phoneNumber || "Tidak tersedia"}</p>
+              <p>+62{reservation?.Mechanic?.phoneNumber}</p>
             </div>
             <div>
               <h4 className="text-sm font-medium">Status</h4>
@@ -412,12 +412,6 @@ const ReservationHistoryPage = () => {
                           <Eye className="w-4 h-4 mr-2" />
                           Detail
                         </Button>
-                        {/* {reservation.status.toLowerCase() === "success" && (
-                          <Button variant="secondary" size="sm">
-                            <Repeat className="w-4 h-4 mr-2" />
-                            Buat Ulang
-                          </Button>
-                        )} */}
                       </div>
                     </CardContent>
                   </Card>
