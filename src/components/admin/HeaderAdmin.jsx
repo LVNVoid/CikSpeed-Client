@@ -70,10 +70,10 @@ const HeaderAdmin = ({ toggleSidebar }) => {
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem
                 className="text-red-500 cursor-pointer flex items-center gap-2"
                 onClick={handleLogout}

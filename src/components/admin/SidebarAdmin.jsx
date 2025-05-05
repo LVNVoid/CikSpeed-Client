@@ -39,27 +39,27 @@ const SidebarAdmin = ({ isOpen, mobile = false }) => {
     },
     {
       icon: <BookText className="mr-2 h-4 w-4" />,
-      text: "Reservations",
+      text: "Reservasi",
       path: "/admin/reservations",
     },
     {
       icon: <TicketPlus className="mr-2 h-4 w-4" />,
-      text: "Symptoms",
+      text: "Gejala Kerusakan",
       path: "/admin/symptoms",
     },
     {
       icon: <Users className="mr-2 h-4 w-4" />,
-      text: "Mechanics",
+      text: "Mekanik",
       path: "/admin/mechanics",
     },
     {
       icon: <History className="mr-2 h-4 w-4" />,
-      text: "History",
+      text: "Riwayat",
       path: "/admin/history",
     },
     {
       icon: <BookUser className="mr-2 h-4 w-4" />,
-      text: "Users",
+      text: "Pengguna",
       path: "/admin/users",
     },
   ];

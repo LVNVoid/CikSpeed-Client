@@ -29,15 +29,15 @@ export const AddSymptomModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Tambah Gejala Baru</DialogTitle>
+          <DialogTitle>Tambah Gejala Kerusakan Baru</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
-            <Label>Nama Gejala</Label>
+            <Label>Nama Gejala Kerusakan</Label>
             <Input
               value={name}
               onChange={onNameChange}
-              placeholder="Masukkan nama gejala"
+              placeholder="Masukkan nama gejala kerusakan"
             />
           </div>
           <div>

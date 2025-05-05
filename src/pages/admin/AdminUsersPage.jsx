@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, MoreHorizontal } from "lucide-react";
 
 import api from "@/services/api";
 import { Badge } from "@/components/ui/badge";
@@ -74,7 +74,7 @@ const UsersPage = () => {
     >
       <section className="mb-6">
         {/* Title */}
-        <h1 className="text-2xl font-bold mb-6">User Management</h1>
+        <h1 className="text-2xl font-bold mb-6">Manajemen Data Pengguna</h1>
       </section>
 
       <section className="mb-6">
@@ -83,7 +83,7 @@ const UsersPage = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
             <Input
-              placeholder="Search users..."
+              placeholder="Cari pengguna..."
               className="pl-10"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -93,12 +93,12 @@ const UsersPage = () => {
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="flex gap-2">
                 <Filter className="h-4 w-4" />
-                {filterRole === "all" ? "All Roles" : filterRole}
+                {filterRole === "all" ? "Semua Role" : filterRole}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem onClick={() => setFilterRole("all")}>
-                All Roles
+                Semua Role
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setFilterRole("admin")}>
                 Admin
@@ -147,7 +147,7 @@ const UsersPage = () => {
                     colSpan={7}
                     className="text-center py-10 text-gray-500"
                   >
-                    No users found
+                    Tidak ada data user
                   </TableCell>
                 </TableRow>
               ) : (
@@ -177,7 +177,7 @@ const UsersPage = () => {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm">
-                            Actions
+                            <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>

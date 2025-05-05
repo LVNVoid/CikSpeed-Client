@@ -44,6 +44,7 @@ import {
 } from "@/lib/utils";
 import EditReservationModal from "@/components/admin/reservations/EditReservationModal";
 import DetailReservationModal from "@/components/admin/reservations/DetailReservationModal";
+import { toast } from "sonner";
 
 const AdminReservationPage = () => {
   const [reservations, setReservations] = useState([]);
@@ -151,6 +152,18 @@ const AdminReservationPage = () => {
             {serviceType || "Tidak diketahui"}
           </Badge>
         );
+    }
+  };
+
+  const cancelReservation = async (reservationId) => {
+    try {
+      await api.delete(`/reservations/${reservationId}`);
+      setReservations((prev) => prev.filter((r) => r.id !== reservationId));
+      toast.success("Reservasi berhasil dibatalkan.");
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal membatalkan reservasi.");
+      fetchReservation();
     }
   };
 
@@ -383,7 +396,10 @@ const AdminReservationPage = () => {
                             >
                               Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-600">
+                            <DropdownMenuItem
+                              className="text-red-600"
+                              onClick={() => cancelReservation(reservation.id)}
+                            >
                               Batalkan
                             </DropdownMenuItem>
                           </DropdownMenuContent>

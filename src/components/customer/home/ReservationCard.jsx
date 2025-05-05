@@ -143,20 +143,22 @@ const ReservationCard = ({ reservation, onCancelReservation }) => {
         )}
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button
-          variant="outline"
-          onClick={() => navigate("/reservations")} // Tambahkan navigasi
-        >
-          Detail Reservasi &raquo;
-        </Button>
         {reservation && (
-          <Button
-            variant="destructive"
-            disabled={reservation.status !== "pending"}
-            onClick={() => onCancelReservation(reservation.id)}
-          >
-            Batalkan
-          </Button>
+          <>
+            <Button
+              variant="outline"
+              onClick={() => navigate("/reservations")} // Tambahkan navigasi
+            >
+              Detail Reservasi &raquo;
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={reservation.status !== "pending"}
+              onClick={() => onCancelReservation(reservation.id)}
+            >
+              Batalkan
+            </Button>
+          </>
         )}
       </CardFooter>
     </Card>

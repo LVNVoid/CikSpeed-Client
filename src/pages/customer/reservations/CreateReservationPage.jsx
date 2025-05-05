@@ -305,7 +305,7 @@ const CreateReservation = () => {
               "Detail Servis",
               <>
                 <Label className="mb-2 block text-sm font-medium">
-                  Pilih gejala yang terjadi pada kendaraan anda
+                  Pilih gejala kerusakan yang terjadi pada kendaraan anda
                 </Label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
                   {symptoms.map((symptom) => (
@@ -345,12 +345,12 @@ const CreateReservation = () => {
                   <div className="flex items-center gap-2">
                     <AlertCircleIcon className="h-5 w-5 text-warning flex-shrink-0" />
                     <span className="text-lg font-semibold text-foreground">
-                      Gejala lain / Deskripsi Reservasi
+                      Gejala kerusakan lain / Deskripsi Reservasi
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Jika Anda tidak menemukan gejala yang sesuai, pilih opsi ini
-                    dan deskripsikan gejalanya secara manual.
+                    Jika Anda tidak menemukan gejala kerusakan yang sesuai,
+                    pilih opsi ini dan deskripsikan gejalanya secara manual.
                   </p>
 
                   <div className="mt-3 flex items-center space-x-2">
@@ -369,7 +369,7 @@ const CreateReservation = () => {
                       htmlFor="other-symptom"
                       className="text-sm font-medium"
                     >
-                      Saya ingin mengisi gejala lain
+                      Saya ingin mengisi gejala kerusakan lain
                     </Label>
                   </div>
 
@@ -379,7 +379,7 @@ const CreateReservation = () => {
                       className="text-sm font-medium"
                     >
                       {isOtherSymptom
-                        ? "Deskripsikan gejala yang dirasakan"
+                        ? "Deskripsikan gejala kerusakan yang dirasakan"
                         : "Berikan deskripsi tambahan (opsional)"}
                     </Label>
                     <Textarea
@@ -533,7 +533,7 @@ const CreateReservation = () => {
               }
               className="flex-1 sm:flex-none"
             >
-              {isLoading ? "Processing..." : "Book Appointment"}
+              {isLoading ? "Processing..." : "Buat Reservasi"}
             </Button>
           </CardFooter>
         </form>

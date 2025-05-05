@@ -70,10 +70,10 @@ const AdminSymptomPage = () => {
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Manajemen Gejala
+            Manajemen Gejala Kerusakan
           </h1>
           <p className="text-muted-foreground mt-1">
-            Kelola daftar gejala untuk layanan servis
+            Kelola daftar gejala kerusakan untuk layanan servis
           </p>
         </div>
         <div className="flex gap-2">
@@ -89,7 +89,7 @@ const AdminSymptomPage = () => {
           {isAdmin && (
             <Button size="sm" onClick={() => setAddModalOpen(true)}>
               <PlusCircle className="w-4 h-4 mr-2" />
-              Tambah Gejala
+              Tambah Gejala Kerusakan
             </Button>
           )}
         </div>
@@ -97,15 +97,17 @@ const AdminSymptomPage = () => {
 
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Filter Gejala</CardTitle>
-          <CardDescription>Cari dan filter daftar gejala</CardDescription>
+          <CardTitle>Filter Gejala Kerusakan</CardTitle>
+          <CardDescription>
+            Cari dan filter daftar gejala kerusakan
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
-                placeholder="Cari berdasarkan nama gejala..."
+                placeholder="Cari berdasarkan nama gejala kerusakan..."
                 className="pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

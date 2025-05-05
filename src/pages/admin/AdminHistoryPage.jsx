@@ -257,7 +257,7 @@ const ReservationHistoryPage = () => {
       </motion.div>
 
       {/* Desktop Filter */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
@@ -293,7 +293,7 @@ const ReservationHistoryPage = () => {
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </motion.div> */}
 
       {/* Error Alert */}
       {error && (
@@ -318,9 +318,7 @@ const ReservationHistoryPage = () => {
       >
         <Card>
           <CardHeader>
-            <CardTitle>
-              Riwayat Reservasi {!loading && `(${filteredReservations.length})`}
-            </CardTitle>
+            <CardTitle>Riwayat Reservasi</CardTitle>
           </CardHeader>
           <CardContent>
             {loading ? (
@@ -343,7 +341,7 @@ const ReservationHistoryPage = () => {
               </div>
             ) : filteredReservations.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                Tidak ada reservasi yang sesuai dengan filter
+                Tidak ada reservasi yang sesuai
               </div>
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
