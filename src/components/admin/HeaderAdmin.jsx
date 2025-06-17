@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { ModeToggle } from "../mode-toggle";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import NotificationDropdown from "./NotificationDropdown";
 import { capitalizeFirstLetter, getRoleBadgeVariant } from "@/lib/utils";
 
 const HeaderAdmin = ({ toggleSidebar }) => {
@@ -55,7 +54,6 @@ const HeaderAdmin = ({ toggleSidebar }) => {
       </div>
 
       <div className="flex items-center space-x-2">
-        <NotificationDropdown />
         <ModeToggle />
 
         <div className="flex items-center">

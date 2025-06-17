@@ -20,7 +20,6 @@ import PublicLayout from "./layouts/PublicLayout";
 import LandingPage from "./pages/LadingPage";
 import AdminSymptomPage from "./pages/admin/AdminSymptomPage";
 import AdminMechanicPage from "./pages/admin/AdminMechanicPage";
-import { NotificationProvider } from "./contexts/NotificationContext";
 
 const router = createBrowserRouter([
   {
@@ -133,11 +132,9 @@ const router = createBrowserRouter([
 
 const App = () => (
   <AuthProvider>
-    <NotificationProvider>
-      <ThemeProvider defaultTheme="system" storageKey="motor-service-theme">
-        <RouterProvider router={router} />
-      </ThemeProvider>
-    </NotificationProvider>
+    <ThemeProvider defaultTheme="system" storageKey="motor-service-theme">
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </AuthProvider>
 );
 
