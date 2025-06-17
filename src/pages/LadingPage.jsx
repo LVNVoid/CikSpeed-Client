@@ -371,7 +371,7 @@ const LandingPage = () => {
                 {
                   question: "Apakah saya bisa membatalkan reservasi?",
                   answer:
-                    "Ya, Anda dapat membatalkan reservasi melalui akun Anda minimal 2 jam sebelum jadwal yang telah ditetapkan.",
+                    "Ya, Anda dapat membatalkan reservasi melalui akun Anda sebelum status konfirmasi dilakukan.",
                 },
                 {
                   question:
@@ -382,7 +382,7 @@ const LandingPage = () => {
                 {
                   question: "Berapa lama proses konfirmasi reservasi?",
                   answer:
-                    "Konfirmasi reservasi biasanya dilakukan dalam waktu 30 menit hingga 1 jam setelah Anda melakukan reservasi.",
+                    "Konfirmasi reservasi biasanya dilakukan dalam 1 hari sebelum tanggal reservasi",
                 },
               ].map((faq, index) => (
                 <AccordionItem

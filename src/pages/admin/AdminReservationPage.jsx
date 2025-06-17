@@ -94,6 +94,51 @@ const AdminReservationPage = () => {
     fetchReservation(); // Refresh data setelah edit berhasil
   };
 
+  // Function to handle WhatsApp contact
+  const contactCustomer = (reservation) => {
+    const phoneNumber = reservation.User?.phone;
+
+    if (!phoneNumber) {
+      toast.error("Nomor telepon pelanggan tidak tersedia");
+      return;
+    }
+
+    let formattedPhone = phoneNumber.toString();
+
+    formattedPhone = formattedPhone.replace(/\D/g, "");
+
+    if (!formattedPhone.startsWith("62")) {
+      if (formattedPhone.startsWith("0")) {
+        formattedPhone = "62" + formattedPhone.substring(1);
+      } else {
+        formattedPhone = "62" + formattedPhone;
+      }
+    }
+
+    const customerName = reservation.User?.name || "Pelanggan";
+    const serviceType =
+      reservation.serviceType === "major" ? "Servis Besar" : "Servis Ringan";
+    const reservationDate = formatDate(reservation.date);
+    const reservationTime = formatTime(reservation.time);
+
+    const defaultMessage = `Halo ${customerName}, 
+
+Saya menghubungi Anda terkait reservasi ${serviceType} Anda:
+
+- Tanggal: ${reservationDate}
+- Waktu: ${reservationTime}
+
+[Your Message]`;
+
+    const encodedMessage = encodeURIComponent(defaultMessage);
+
+    const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodedMessage}`;
+
+    window.open(whatsappUrl, "_blank");
+
+    toast.success(`Membuka WhatsApp untuk menghubungi ${customerName}`);
+  };
+
   const filteredReservations = reservations.filter((reservation) => {
     // Filter by search query
     const matchesSearch =
@@ -386,6 +431,12 @@ const AdminReservationPage = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() => contactCustomer(reservation)}
+                              className="flex items-center gap-2"
+                            >
+                              Hubungi Pelanggan
+                            </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => openDetailModal(reservation.id)}
                             >

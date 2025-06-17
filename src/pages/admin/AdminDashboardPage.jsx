@@ -79,35 +79,35 @@ const AdminDashboardPage = () => {
   };
 
   // Stat card renderer
-  const StatCard = ({ title, value, icon, percentChange, color }) => {
-    const IconComponent = icon;
-    return (
-      <Card className="overflow-hidden">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">
-                {title}
-              </p>
-              <h3 className="text-2xl font-bold">{value.toLocaleString()}</h3>
-              <div className="flex items-center mt-2 text-xs">
-                <ArrowUpRight className="w-3 h-3 mr-1 text-green-500" />
-                <span className="text-green-500 font-medium">
-                  {percentChange}%
-                </span>
-                <span className="text-muted-foreground ml-1">
-                  from last month
-                </span>
-              </div>
-            </div>
-            <div className={`p-3 rounded-lg ${color}`}>
-              <IconComponent className="w-6 h-6 text-white" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
+  // const StatCard = ({ title, value, icon, percentChange, color }) => {
+  //   const IconComponent = icon;
+  //   return (
+  //     <Card className="overflow-hidden">
+  //       <CardContent className="p-6">
+  //         <div className="flex items-center justify-between">
+  //           <div>
+  //             <p className="text-sm font-medium text-muted-foreground mb-1">
+  //               {title}
+  //             </p>
+  //             <h3 className="text-2xl font-bold">{value.toLocaleString()}</h3>
+  //             <div className="flex items-center mt-2 text-xs">
+  //               <ArrowUpRight className="w-3 h-3 mr-1 text-green-500" />
+  //               <span className="text-green-500 font-medium">
+  //                 {percentChange}%
+  //               </span>
+  //               <span className="text-muted-foreground ml-1">
+  //                 from last month
+  //               </span>
+  //             </div>
+  //           </div>
+  //           <div className={`p-3 rounded-lg ${color}`}>
+  //             <IconComponent className="w-6 h-6 text-white" />
+  //           </div>
+  //         </div>
+  //       </CardContent>
+  //     </Card>
+  //   );
+  // };
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -116,7 +116,7 @@ const AdminDashboardPage = () => {
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground">Welcome back, Admin</p>
         </div>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Button variant="outline" size="sm">
             <Calendar className="w-4 h-4 mr-2" />
             March 2025
@@ -125,11 +125,11 @@ const AdminDashboardPage = () => {
             <TrendingUp className="w-4 h-4 mr-2" />
             Download Report
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Dashboard Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -179,7 +179,6 @@ const AdminDashboardPage = () => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
-          {/* Sales Overview Chart */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -219,7 +218,6 @@ const AdminDashboardPage = () => {
             </Card>
           </motion.div>
 
-          {/* Recent Orders Table */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -319,7 +317,7 @@ const AdminDashboardPage = () => {
             </CardContent>
           </Card>
         </TabsContent>
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 };
