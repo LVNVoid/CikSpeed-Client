@@ -23,7 +23,7 @@ export const NotificationProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      socketRef.current = io("http://localhost:5000");
+      socketRef.current = io("http://18.142.54.194:3000");
 
       if (user.role === "admin") {
         socketRef.current.emit("admin-login");
