@@ -10,32 +10,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/mode-toggle";
-import {
-  Menu,
-  X,
-  User,
-  Calendar,
-  History,
-  LogOut,
-  Home,
-  Settings,
-} from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
+import { Menu, X, User, Calendar, History, LogOut, Home } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Navbar = () => {
-  const { user, logout } = useAuth(); // Gunakan useAuth untuk mendapatkan user dan fungsi logout
+  const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Tutup menu mobile saat berpindah halaman
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const handleLogout = async () => {
     try {
-      await logout(); // Gunakan fungsi logout dari useAuth
-      navigate("/login"); // Navigasi ke halaman login setelah logout
+      await logout();
+      navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -70,9 +61,7 @@ const Navbar = () => {
     <div className="container mx-auto py-3 px-4 sm:px-6 lg:px-8 border-t backdrop-blur-sm bg-background/80 dark:bg-background/90">
       <div className="flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2 text-xl font-bold">
-          <span>
-            <span className="text-gradient">CikSpeed</span>
-          </span>
+          <span className="text-gradient">CikSpeed</span>
         </Link>
 
         {/* Mobile Menu Button */}
@@ -84,7 +73,7 @@ const Navbar = () => {
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        {/* Menu Navigasi Desktop */}
+        {/* Desktop Menu */}
         <nav className="hidden sm:block">
           <ul className="flex items-center gap-1">
             {menuItems
@@ -132,47 +121,10 @@ const Navbar = () => {
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium">{user?.name}</p>
                     <p className="text-xs text-muted-foreground">
-                      {user?.phone}
+                      +62{user?.phone}
                     </p>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link
-                    to="/profile"
-                    className="cursor-pointer flex items-center gap-2"
-                  >
-                    <User size={16} />
-                    Profil Saya
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    to="/reservations"
-                    className="cursor-pointer flex items-center gap-2"
-                  >
-                    <Calendar size={16} />
-                    Reservasi Saya
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    to="/history"
-                    className="cursor-pointer flex items-center gap-2"
-                  >
-                    <History size={16} />
-                    Riwayat Servis
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    to="/settings"
-                    className="cursor-pointer flex items-center gap-2"
-                  >
-                    <Settings size={16} />
-                    Pengaturan
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="text-red-500 cursor-pointer flex items-center gap-2"
@@ -207,86 +159,74 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="sm:hidden mt-3 pt-4 pb-3 px-2 border-t backdrop-blur-sm bg-background/80 dark:bg-background/90">
-          <nav className="flex flex-col space-y-1">
-            {menuItems
-              .filter((item) => item.visible)
-              .map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`flex items-center gap-2 px-3 py-2.5 rounded-md font-medium ${
-                    isActive(item.path)
-                      ? "text-primary bg-primary/10"
-                      : "hover:bg-primary/5"
-                  }`}
-                  onClick={closeMobileMenu}
-                >
-                  <item.icon size={18} />
-                  {item.label}
-                </Link>
-              ))}
+      {/* Mobile Menu with Animation */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+            className="sm:hidden mt-3 pt-4 pb-3 px-2 backdrop-blur-sm bg-background/80 dark:bg-background/90 shadow-md rounded-md border"
+          >
+            <nav className="flex flex-col space-y-1">
+              {menuItems
+                .filter((item) => item.visible)
+                .map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-md font-medium transition-colors ${
+                      isActive(item.path)
+                        ? "text-primary bg-primary/10"
+                        : "hover:bg-primary/5"
+                    }`}
+                    onClick={closeMobileMenu}
+                  >
+                    <item.icon size={18} />
+                    {item.label}
+                  </Link>
+                ))}
 
-            {user ? (
-              <>
-                <div className="h-px bg-border my-2"></div>
-                <Link
-                  to="/profile"
-                  className={`flex items-center gap-2 px-3 py-2.5 rounded-md font-medium ${
-                    isActive("/profile")
-                      ? "text-primary bg-primary/10"
-                      : "hover:bg-primary/5"
-                  }`}
-                  onClick={closeMobileMenu}
-                >
-                  <User size={18} />
-                  Profil Saya
-                </Link>
-                <Link
-                  to="/settings"
-                  className={`flex items-center gap-2 px-3 py-2.5 rounded-md font-medium ${
-                    isActive("/settings")
-                      ? "text-primary bg-primary/10"
-                      : "hover:bg-primary/5"
-                  }`}
-                  onClick={closeMobileMenu}
-                >
-                  <Settings size={18} />
-                  Pengaturan
-                </Link>
-                <button
-                  className="flex items-center gap-2 px-3 py-2.5 rounded-md font-medium text-red-500 hover:bg-red-500/5 w-full text-left mt-1"
-                  onClick={handleLogout}
-                >
-                  <LogOut size={18} />
-                  Keluar
-                </button>
-              </>
-            ) : (
-              <div className="flex flex-col gap-2 pt-2">
-                <Link to="/login" className="w-full" onClick={closeMobileMenu}>
-                  <Button variant="outline" className="w-full">
-                    Masuk
-                  </Button>
-                </Link>
-                <Link
-                  to="/register"
-                  className="w-full"
-                  onClick={closeMobileMenu}
-                >
-                  <Button className="w-full">Daftar</Button>
-                </Link>
+              {user ? (
+                <>
+                  <div className="h-px bg-border my-2" />
+                  <button
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-md font-medium text-red-500 hover:bg-red-500/5 w-full text-left mt-1 transition-colors"
+                    onClick={handleLogout}
+                  >
+                    <LogOut size={18} />
+                    Keluar
+                  </button>
+                </>
+              ) : (
+                <div className="flex flex-col gap-2 pt-2">
+                  <Link
+                    to="/login"
+                    className="w-full"
+                    onClick={closeMobileMenu}
+                  >
+                    <Button variant="outline" className="w-full">
+                      Masuk
+                    </Button>
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="w-full"
+                    onClick={closeMobileMenu}
+                  >
+                    <Button className="w-full">Daftar</Button>
+                  </Link>
+                </div>
+              )}
+              <div className="pt-3 mt-1 flex justify-between items-center border-t">
+                <p className="text-sm text-muted-foreground">Ubah tema</p>
+                <ModeToggle />
               </div>
-            )}
-            <div className="pt-3 mt-1 flex justify-between items-center border-t">
-              <p className="text-sm text-muted-foreground">Ubah tema</p>
-              <ModeToggle />
-            </div>
-          </nav>
-        </div>
-      )}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

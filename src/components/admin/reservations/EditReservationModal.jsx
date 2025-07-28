@@ -71,11 +71,9 @@ const EditReservationModal = ({
       const fetchData = async () => {
         setLoading(true);
         try {
-          // Fetch mechanics first
           const mechanicsResponse = await api.get("/mechanics");
           setMechanics(mechanicsResponse.data);
 
-          // Then fetch reservation
           const reservationResponse = await api.get(
             `/reservations/${reservationId}`
           );
@@ -86,7 +84,6 @@ const EditReservationModal = ({
           setStatus(reservation.status);
           setServiceType(reservation.serviceType);
 
-          // Convert mechanicId to string to match Select component expectations
           const mechId = reservation.mechanicId
             ? reservation.mechanicId.toString()
             : "";
@@ -102,7 +99,6 @@ const EditReservationModal = ({
     }
   }, [reservationId, reservationExists]);
 
-  // Fetch available time slots when date or service type changes
   const fetchAvailableSlots = async (selectedDate) => {
     if (!selectedDate || !serviceType) return;
 
@@ -112,7 +108,7 @@ const EditReservationModal = ({
         params: {
           date: selectedDate,
           serviceType,
-          reservationId, // Include current reservation ID to exclude it from availability check
+          reservationId,
         },
       });
       setAvailableSlots(response.data);
@@ -126,14 +122,12 @@ const EditReservationModal = ({
     }
   };
 
-  // Fetch available slots when date or service type changes
   useEffect(() => {
     if (formattedDate && serviceType) {
       fetchAvailableSlots(formattedDate);
     }
   }, [serviceType, formattedDate]);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -152,7 +146,6 @@ const EditReservationModal = ({
       return;
     }
 
-    // Check if mechanic exists in the current mechanics list
     const mechanicExists = mechanics.some(
       (m) => m.id.toString() === mechanicId.toString()
     );
@@ -176,22 +169,21 @@ const EditReservationModal = ({
       time,
       status,
       serviceType,
-      mechanicId: mechanicId.toString(), // Ensure it's a string
+      mechanicId: mechanicId.toString(),
     };
 
     try {
-      // Double-check reservation exists before updating
       await api.get(`/reservations/${reservationId}`);
 
       await api.put(`/reservations/${reservationId}`, requestData);
 
       toast.success("Reservasi berhasil diperbarui");
-      onSuccess(); // Refresh data setelah berhasil
-      onClose(); // Tutup modal
+      onSuccess();
+      onClose();
     } catch (error) {
       if (error.response?.status === 404) {
         toast.error("Reservasi tidak ditemukan");
-        onClose(); // Close modal if reservation doesn't exist
+        onClose();
       } else if (error.response?.data?.error === "Mekanik tidak ditemukan") {
         toast.error(
           "Mekanik tidak ditemukan. Silakan pilih mekanik yang tersedia."
@@ -208,10 +200,8 @@ const EditReservationModal = ({
     }
   };
 
-  // Function to check if a date should be disabled
   const isDateDisabled = (date) => {
     if (!date) return false;
-    // Can only select future dates or the current reservation date
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -224,7 +214,6 @@ const EditReservationModal = ({
     return date < today;
   };
 
-  // Don't render if reservation doesn't exist
   if (!reservationExists) {
     return null;
   }
@@ -335,7 +324,6 @@ const EditReservationModal = ({
                 <SelectContent>
                   <SelectItem value="pending">Menunggu Konfirmasi</SelectItem>
                   <SelectItem value="confirmed">Konfirmasi</SelectItem>
-                  <SelectItem value="cancelled">Batalkan</SelectItem>
                   <SelectItem value="success">Selesai</SelectItem>
                 </SelectContent>
               </Select>
