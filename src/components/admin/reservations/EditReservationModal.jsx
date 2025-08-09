@@ -37,7 +37,6 @@ const EditReservationModal = ({
 }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [time, setTime] = useState("");
-  const [status, setStatus] = useState("");
   const [serviceType, setServiceType] = useState("");
   const [mechanicId, setMechanicId] = useState("");
   const [mechanics, setMechanics] = useState([]);
@@ -81,7 +80,6 @@ const EditReservationModal = ({
 
           setSelectedDate(new Date(reservation.date));
           setTime(reservation.time);
-          setStatus(reservation.status);
           setServiceType(reservation.serviceType);
 
           const mechId = reservation.mechanicId
@@ -167,7 +165,6 @@ const EditReservationModal = ({
     const requestData = {
       date: formattedDate,
       time,
-      status,
       serviceType,
       mechanicId: mechanicId.toString(),
     };
@@ -222,7 +219,7 @@ const EditReservationModal = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg w-full p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
         <DialogHeader className="mb-4">
-          <DialogTitle className="text-xl">Konfirmasi Reservasi</DialogTitle>
+          <DialogTitle className="text-xl">Edit Reservasi</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
@@ -312,23 +309,6 @@ const EditReservationModal = ({
               )}
             </div>
 
-            {/* Status */}
-            <div>
-              <Label htmlFor="status" className="text-sm font-medium">
-                Status
-              </Label>
-              <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Pilih status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pending">Menunggu Konfirmasi</SelectItem>
-                  <SelectItem value="confirmed">Konfirmasi</SelectItem>
-                  <SelectItem value="success">Selesai</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
             {/* Jenis Servis */}
             <div>
               <Label htmlFor="serviceType" className="text-sm font-medium">
@@ -384,12 +364,12 @@ const EditReservationModal = ({
             >
               {loading ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
                   Menyimpan...
                 </>
               ) : (
                 <>
-                  <Save className="h-4 w-4" />
+                  <Save className="h-4 w-4 mr-2" />
                   Simpan
                 </>
               )}

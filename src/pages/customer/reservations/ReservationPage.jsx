@@ -12,6 +12,7 @@ import {
   User,
   Car,
   Wrench,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatTime } from "@/lib/utils";
@@ -52,6 +53,12 @@ const StatusBadge = ({ status }) => {
       icon: <CircleCheck className="mr-2 h-4 w-4" />,
       text: "Dikonfirmasi",
       message: "* Reservasi telah dikonfirmasi, mohon datang tepat waktu",
+    },
+    in_progress: {
+      variant: "info",
+      icon: <Loader2 className="mr-2 h-4 w-4 animate-spin" />,
+      text: "Sedang Dikerjakan",
+      message: "* Servis sedang dikerjakan",
     },
     cancelled: {
       variant: "danger",

@@ -16,6 +16,7 @@ import {
   Loader,
   CircleCheck,
   CircleX,
+  Loader2,
 } from "lucide-react";
 import { formatTime } from "@/lib/utils";
 
@@ -58,7 +59,7 @@ const ReservationCard = ({ reservation, onCancelReservation }) => {
                     ? "warning"
                     : reservation.status === "confirmed"
                     ? "success"
-                    : "danger"
+                    : "info"
                 }
               >
                 {reservation.status === "pending" ? (
@@ -66,13 +67,13 @@ const ReservationCard = ({ reservation, onCancelReservation }) => {
                 ) : reservation.status === "confirmed" ? (
                   <CircleCheck className="mr-2 h-4 w-4" />
                 ) : (
-                  <CircleX className="mr-2 h-4 w-4" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}{" "}
                 {reservation.status === "pending"
                   ? "Menunggu Konfirmasi"
                   : reservation.status === "confirmed"
                   ? "Dikonfirmasi"
-                  : "Dibatalkan"}
+                  : "Sedang Dikerjakan"}
               </Badge>
             </div>
 

@@ -53,6 +53,8 @@ export const getStatusBadgeVariant = (status) => {
       return "warning";
     case "confirmed":
       return "success";
+    case "in_progress":
+      return "info";
     default:
       return "default";
   }
@@ -78,6 +80,8 @@ export const getTranslatedStatus = (status) => {
       return "Dikonfirmasi";
     case "success":
       return "Berhasil";
+    case "in_progress":
+      return "Sedang Dikerjakan";
     case "failed":
       return "Gagal";
     default:

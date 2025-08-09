@@ -3,13 +3,30 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { format, parseISO } from "date-fns";
 import { id } from "date-fns/locale";
-import { RefreshCcw, Eye, AlertCircleIcon, FilterIcon } from "lucide-react";
+import {
+  RefreshCcw,
+  Eye,
+  AlertCircleIcon,
+  FilterIcon,
+  Star,
+  MessageSquare,
+  Calendar,
+  User,
+  Car,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
@@ -41,8 +58,12 @@ const ReservationHistoryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
 
   // Fetch reservation history data from API
   const fetchReservationHistory = async () => {
@@ -61,6 +82,40 @@ const ReservationHistoryPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Fetch review data from API
+  const fetchReview = async (reservationId) => {
+    setReviewLoading(true);
+    setReviewError(null);
+    setSelectedReview(null);
+
+    try {
+      const response = await api.get(`/reviews/${reservationId}`);
+      setSelectedReview(response.data);
+    } catch (error) {
+      console.error("Error fetching review:", error);
+      setReviewError(
+        error.response?.data?.error || error.response?.status === 404
+          ? "Review tidak ditemukan untuk reservasi ini"
+          : "Terjadi kesalahan saat mengambil data review"
+      );
+    } finally {
+      setReviewLoading(false);
+    }
+  };
+
+  // Handle review modal open
+  const handleViewReview = (reservationId) => {
+    setIsReviewModalOpen(true);
+    fetchReview(reservationId);
+  };
+
+  // Handle review modal close
+  const handleCloseReviewModal = () => {
+    setIsReviewModalOpen(false);
+    setSelectedReview(null);
+    setReviewError(null);
   };
 
   // Fetch data on component mount
@@ -113,6 +168,85 @@ const ReservationHistoryPage = () => {
     }
   };
 
+  // Render star rating
+  const renderStars = (rating) => {
+    return Array.from({ length: 5 }, (_, index) => (
+      <Star
+        key={index}
+        className={`w-4 h-4 ${
+          index < rating ? "text-yellow-400 fill-current" : "text-gray-300"
+        }`}
+      />
+    ));
+  };
+
+  // Review Modal Component
+  const ReviewModal = () => (
+    <Dialog open={isReviewModalOpen} onOpenChange={handleCloseReviewModal}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Review Pelanggan</DialogTitle>
+          <DialogDescription>
+            Review yang diberikan untuk reservasi ini
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          {reviewLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <span className="ml-2">Memuat review...</span>
+            </div>
+          ) : reviewError ? (
+            <Alert variant="destructive">
+              <AlertCircleIcon className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{reviewError}</AlertDescription>
+            </Alert>
+          ) : selectedReview ? (
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <div className="flex">{renderStars(selectedReview.rating)}</div>
+                <span className="text-sm font-medium">
+                  {selectedReview.rating}/5
+                </span>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-medium mb-2">Komentar:</h4>
+                <p className="text-sm text-muted-foreground bg-background p-3 rounded-md">
+                  {selectedReview.comment || "Tidak ada komentar"}
+                </p>
+              </div>
+
+              <div className="text-xs text-muted-foreground">
+                Ditulis pada:{" "}
+                {format(
+                  parseISO(selectedReview.createdAt),
+                  "dd MMMM yyyy, HH:mm",
+                  { locale: id }
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="rounded-full bg-background p-4 mb-4">
+                <MessageSquare className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-medium text-muted-foreground mb-2">
+                Belum Ada Review
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-sm">
+                Review belum tersedia untuk reservasi ini. Review akan muncul
+                setelah pelanggan memberikan penilaian.
+              </p>
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
   // Reservation Details Drawer
   const ReservationDetailsDrawer = ({ reservation, onClose }) => (
     <Drawer open={!!reservation} onOpenChange={onClose}>
@@ -141,19 +275,25 @@ const ReservationHistoryPage = () => {
             </div>
           </div>
           <Separator />
-          <div>
-            <h4 className="text-sm font-medium mb-2">Gejala</h4>
-            {reservation?.Symptoms && reservation.Symptoms.length > 0 ? (
-              <ul className="text-sm text-muted-foreground list-disc pl-4">
-                {reservation.Symptoms.map((symptom) => (
-                  <li key={symptom.id}>{symptom.name}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                Tidak ada gejala tercatat
-              </p>
-            )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <h4 className="text-sm font-medium mb-2">Gejala</h4>
+              {reservation?.Symptoms && reservation.Symptoms.length > 0 ? (
+                <ul className="text-sm text-muted-foreground list-disc pl-4">
+                  {reservation.Symptoms.map((symptom) => (
+                    <li key={symptom.id}>{symptom.name}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Tidak ada gejala tercatat
+                </p>
+              )}
+            </div>
+            <div>
+              <h4 className="text-sm font-medium">Detail Servis</h4>
+              <p>{reservation?.serviceDetail}</p>
+            </div>
           </div>
           <Separator />
           <div className="grid grid-cols-2 gap-4">
@@ -257,10 +397,10 @@ const ReservationHistoryPage = () => {
       </motion.div>
 
       {/* Desktop Filter */}
-      {/* <motion.div
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
+        transition={{ delay: 0.2 }}
         className="hidden md:block mb-6"
       >
         <Card>
@@ -293,7 +433,7 @@ const ReservationHistoryPage = () => {
             </div>
           </CardContent>
         </Card>
-      </motion.div> */}
+      </motion.div>
 
       {/* Error Alert */}
       {error && (
@@ -314,7 +454,7 @@ const ReservationHistoryPage = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.3 }}
       >
         <Card>
           <CardHeader>
@@ -322,19 +462,21 @@ const ReservationHistoryPage = () => {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-4">
                 {Array(6)
                   .fill(0)
                   .map((_, index) => (
                     <div
                       key={index}
-                      className="border rounded-lg p-4 animate-pulse bg-gray-50"
+                      className="border rounded-lg p-4 animate-pulse"
                     >
-                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded w-1/2 mb-4"></div>
-                      <div className="space-y-2">
-                        <div className="h-3 bg-gray-200 rounded"></div>
-                        <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded w-1/3 mb-3"></div>
+                          <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                        </div>
+                        <div className="h-8 bg-gray-200 rounded w-20"></div>
                       </div>
                     </div>
                   ))}
@@ -344,15 +486,19 @@ const ReservationHistoryPage = () => {
                 Tidak ada reservasi yang sesuai
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {paginatedReservations.map((reservation) => (
-                  <Card
+              <div className="space-y-3">
+                {paginatedReservations.map((reservation, index) => (
+                  <motion.div
                     key={reservation.id}
-                    className="hover:shadow-lg transition-shadow"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
                   >
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      {/* Left side - Main info */}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
                           <h3 className="text-lg font-semibold">
                             #{reservation.id}
                           </h3>
@@ -362,7 +508,6 @@ const ReservationHistoryPage = () => {
                                 ? "success"
                                 : "destructive"
                             }
-                            className="mr-2"
                           >
                             {translateStatus(reservation.status)}
                           </Badge>
@@ -370,38 +515,42 @@ const ReservationHistoryPage = () => {
                             variant={getServiceTypeBadgeVariant(
                               reservation.serviceType
                             )}
-                            className="rounded-full"
                           >
                             {getTranslatedServiceType(reservation.serviceType)}
                           </Badge>
                         </div>
-                        <div className="text-sm text-muted-foreground text-right">
-                          <div>{formatDate(reservation.date)}</div>
-                          <div>{reservation.time.substring(0, 5)}</div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                          <div className="flex items-center gap-2">
+                            <Car className="w-4 h-4 text-muted-foreground" />
+                            <span>
+                              {reservation.Vehicle?.brand}{" "}
+                              {reservation.Vehicle?.type}
+                              <span className="text-muted-foreground ml-1">
+                                ({reservation.Vehicle?.productionYear})
+                              </span>
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <User className="w-4 h-4 text-muted-foreground" />
+                            <span>
+                              {reservation.Mechanic?.name || "Tidak tersedia"}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-muted-foreground" />
+                            <span>
+                              {formatDate(reservation.date)} -{" "}
+                              {reservation.time.substring(0, 5)}
+                            </span>
+                          </div>
                         </div>
                       </div>
 
-                      <Separator className="mb-3" />
-
-                      <div className="mb-3">
-                        <h4 className="font-medium mb-1">Kendaraan</h4>
-                        <p>
-                          {reservation.Vehicle?.brand}{" "}
-                          {reservation.Vehicle?.type}
-                          <span className="text-muted-foreground text-sm ml-2">
-                            ({reservation.Vehicle?.productionYear})
-                          </span>
-                        </p>
-                      </div>
-
-                      <div className="mb-3">
-                        <h4 className="font-medium mb-1">Mekanik</h4>
-                        <p className="text-muted-foreground">
-                          {reservation.Mechanic?.name || "Tidak tersedia"}
-                        </p>
-                      </div>
-
-                      <div className="flex justify-end gap-2">
+                      {/* Right side - Actions */}
+                      <div className="flex items-center gap-2">
                         <Button
                           variant="outline"
                           size="sm"
@@ -410,9 +559,20 @@ const ReservationHistoryPage = () => {
                           <Eye className="w-4 h-4 mr-2" />
                           Detail
                         </Button>
+
+                        <Button
+                          size="sm"
+                          onClick={() => handleViewReview(reservation.id)}
+                          disabled={
+                            reservation.status.toLowerCase() !== "success"
+                          }
+                        >
+                          <MessageSquare className="w-4 h-4 mr-2" />
+                          Review
+                        </Button>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             )}
@@ -463,6 +623,9 @@ const ReservationHistoryPage = () => {
           onClose={() => setSelectedReservation(null)}
         />
       )}
+
+      {/* Review Modal */}
+      <ReviewModal />
     </div>
   );
 };

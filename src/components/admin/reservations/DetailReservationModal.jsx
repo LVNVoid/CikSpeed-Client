@@ -9,6 +9,7 @@ import {
   LoaderIcon,
   Check,
   CheckCircle2,
+  Loader2,
 } from "lucide-react";
 import {
   Dialog,
@@ -140,7 +141,7 @@ const DetailReservationModal = ({ isOpen, onClose, reservationId }) => {
                   {reservation.status === "pending" ? (
                     <LoaderIcon className="h-4 w-4 mr-1 animate-spin" />
                   ) : (
-                    <CheckCircle2 className="h-4 w-4 mr-1" />
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
                   )}
                   {capitalizeFirstLetter(
                     getTranslatedStatus(reservation.status || "pending")

@@ -218,7 +218,7 @@ const CreateReservation = () => {
             {/* Vehicle Selection Section */}
             {renderSection(
               <CarIcon className="h-5 w-5 text-foreground flex-shrink-0" />,
-              "Vehicle Information",
+              "Informasi kendaraan",
               <div>
                 <Label htmlFor="vehicle-select" className="text-sm font-medium">
                   Pilih Kendaraan Anda

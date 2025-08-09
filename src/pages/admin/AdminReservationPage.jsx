@@ -23,7 +23,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CircleCheck, Filter, Loader, RefreshCcw, Search } from "lucide-react";
+import {
+  CircleCheck,
+  Filter,
+  Loader,
+  Loader2,
+  RefreshCcw,
+  Search,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -43,6 +50,7 @@ import {
   getTranslatedStatus,
 } from "@/lib/utils";
 import EditReservationModal from "@/components/admin/reservations/EditReservationModal";
+import EditStatusModal from "@/components/admin/reservations/EditStatusModal";
 import DetailReservationModal from "@/components/admin/reservations/DetailReservationModal";
 import { toast } from "sonner";
 
@@ -52,7 +60,18 @@ const AdminReservationPage = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+
   const [detailModal, setDetailModal] = useState({
+    isOpen: false,
+    reservationId: null,
+  });
+
+  const [editModal, setEditModal] = useState({
+    isOpen: false,
+    reservationId: null,
+  });
+
+  const [editStatusModal, setEditStatusModal] = useState({
     isOpen: false,
     reservationId: null,
   });
@@ -71,11 +90,6 @@ const AdminReservationPage = () => {
     });
   };
 
-  const [editModal, setEditModal] = useState({
-    isOpen: false,
-    reservationId: null,
-  });
-
   const openEditModal = (id) => {
     setEditModal({
       isOpen: true,
@@ -90,8 +104,26 @@ const AdminReservationPage = () => {
     });
   };
 
+  const openEditStatusModal = (id) => {
+    setEditStatusModal({
+      isOpen: true,
+      reservationId: id,
+    });
+  };
+
+  const closeEditStatusModal = () => {
+    setEditStatusModal({
+      isOpen: false,
+      reservationId: null,
+    });
+  };
+
   const handleEditSuccess = () => {
     fetchReservation(); // Refresh data setelah edit berhasil
+  };
+
+  const handleEditStatusSuccess = () => {
+    fetchReservation(); // Refresh data setelah update status berhasil
   };
 
   // Function to handle WhatsApp contact
@@ -285,7 +317,7 @@ Saya menghubungi Anda terkait reservasi ${serviceType} Anda:
                   <SelectItem value="all">Semua Status</SelectItem>
                   <SelectItem value="confirmed">Dikonfirmasi</SelectItem>
                   <SelectItem value="pending">Menunggu Konfirmasi</SelectItem>
-                  <SelectItem value="cancelled">Dibatalkan</SelectItem>
+                  <SelectItem value="in_progress">Sedang Dikerjakan</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -329,7 +361,7 @@ Saya menghubungi Anda terkait reservasi ${serviceType} Anda:
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8">
+                    <TableCell colSpan={6} className="text-center py-8">
                       <div className="flex justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
                       </div>
@@ -340,7 +372,7 @@ Saya menghubungi Anda terkait reservasi ${serviceType} Anda:
                   </TableRow>
                 ) : filteredReservations.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8">
+                    <TableCell colSpan={6} className="text-center py-8">
                       <p className="text-foreground">
                         Tidak ada reservasi yang ditemukan
                       </p>
@@ -398,7 +430,9 @@ Saya menghubungi Anda terkait reservasi ${serviceType} Anda:
                             <Loader className="mr-2 h-4 w-4 animate-spin" />
                           ) : reservation.status === "confirmed" ? (
                             <CircleCheck className="mr-2 h-4 w-4" />
-                          ) : null}
+                          ) : (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          )}
 
                           {capitalizeFirstLetter(
                             getTranslatedStatus(reservation.status || "pending")
@@ -445,7 +479,14 @@ Saya menghubungi Anda terkait reservasi ${serviceType} Anda:
                             <DropdownMenuItem
                               onClick={() => openEditModal(reservation.id)}
                             >
-                              Edit
+                              Edit Reservasi
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                openEditStatusModal(reservation.id)
+                              }
+                            >
+                              Update Status
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-red-600"
@@ -465,17 +506,25 @@ Saya menghubungi Anda terkait reservasi ${serviceType} Anda:
         </CardContent>
       </Card>
 
-      {/* Reservation Detail Modal */}
+      {/* Modals */}
       <DetailReservationModal
         isOpen={detailModal.isOpen}
         onClose={closeDetailModal}
         reservationId={detailModal.reservationId}
       />
+
       <EditReservationModal
         isOpen={editModal.isOpen}
         onClose={closeEditModal}
         reservationId={editModal.reservationId}
         onSuccess={handleEditSuccess}
+      />
+
+      <EditStatusModal
+        isOpen={editStatusModal.isOpen}
+        onClose={closeEditStatusModal}
+        reservationId={editStatusModal.reservationId}
+        onSuccess={handleEditStatusSuccess}
       />
     </motion.div>
   );
